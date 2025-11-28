@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사회복지학적 상상력 퀴즈</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .quiz-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; width: 100%; }
+        h2 { color: #333; font-size: 1.2rem; margin-bottom: 20px; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left; font-size: 1rem; transition: 0.3s; }
+        .btn:hover { background-color: #eef; }
+        .btn.correct { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .btn.wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        #next-btn { background-color: #007bff; color: white; text-align: center; font-weight: bold; display: none; }
+        #feedback { margin-top: 15px; font-weight: bold; color: #333; white-space: pre-wrap;}
+        .progress { text-align: right; color: #666; font-size: 0.9rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="progress" id="progress">문제 1 / 3</div>
+    <h2 id="question">문제 내용이 여기에 나옵니다.</h2>
+    <div id="answer-buttons">
+        </div>
+    <div id="feedback"></div>
+    <button id="next-btn" class="btn" onclick="nextQuestion()">다음 문제로 넘어가기</button>
+</div>
+
+<script>
+    // ★★★ 여기서부터 문제와 정답을 수정하시면 됩니다! ★★★
+    const questions = [
+        {
+            question: "1. 사회복지학적 상상력의 기초가 되는 개념으로 가장 알맞은 것은?",
+            answers: [
+                { text: "개인의 문제", correct: false },
+                { text: "사회적 구조와 개인의 삶의 연결", correct: true }, // 정답인 줄에 true
+                { text: "경제적 이윤 추구", correct: false },
+                { text: "단순한 자선 활동", correct: false }
+            ],
+            explanation: "해설: 사회복지학적 상상력은 개인의 문제를 사회 구조적 맥락에서 바라보는 것입니다."
+        },
+        {
+            question: "2. 다음 중 2강에서 다룬 내용이 아닌 것은?",
+            answers: [
+                { text: "상상력의 필요성", correct: false },
+                { text: "역사적 배경", correct: false },
+                { text: "컴퓨터 코딩 기술", correct: true }, // 정답
+                { text: "인권과 정의", correct: false }
+            ],
+            explanation: "해설: 우리 수업에서는 코딩 기술을 다루지 않습니다."
+        }
+        // 문제를 더 추가하려면 위와 같은 형식으로 콤마(,) 찍고 계속 이어 붙이면 됩니다.
+    ];
+
+    // --- 여기 밑으로는 건드리지 않으셔도 됩니다 (작동 코드) ---
+    const questionElement = document.getElementById("question");
+    const answerButtons = document.getElementById("answer-buttons");
+    const nextButton = document.getElementById("next-btn");
+    const feedbackElement = document.getElementById("feedback");
+    const progressElement = document.getElementById("progress");
+
+    let currentQuestionIndex = 0;
+
+    function startQuiz() {
+        currentQuestionIndex = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        resetState();
+        let currentQuestion = questions[currentQuestionIndex];
+        let questionNo = currentQuestionIndex + 1;
+        questionElement.innerText = currentQuestion.question;
+        progressElement.innerText = `문제 ${questionNo} / ${questions.length}`;
+
+        currentQuestion.answers.forEach(answer => {
+            const button = document.createElement("button");
+            button.innerText = answer.text;
+            button.classList.add("btn");
+            button.addEventListener("click", () => selectAnswer(answer, currentQuestion.explanation));
+            answerButtons.appendChild(button);
+        });
+    }
+
+    function resetState() {
+        nextButton.style.display = "none";
+        feedbackElement.innerText = "";
+        while (answerButtons.firstChild) {
+            answerButtons.removeChild(answerButtons.firstChild);
+        }
+    }
+
+    function selectAnswer(answer, explanation) {
+        const buttons = answerButtons.getElementsByTagName("button");
+        for (let btn of buttons) {
+            btn.disabled = true; // 한 번 누르면 다른 거 못 누르게 잠금
+            if (btn.innerText === answer.text) {
+                if (answer.correct) {
+                    btn.classList.add("correct");
+                    feedbackElement.innerText = "정답입니다! 🎉\n" + explanation;
+                } else {
+                    btn.classList.add("wrong");
+                    feedbackElement.innerText = "오답입니다. 😅\n" + explanation;
+                }
+            }
+        }
+        // 정답을 체크하지 않아도 정답 버튼은 초록색으로 보여주기 (학습용)
+        Array.from(answerButtons.children).forEach(button => {
+            if (questions[currentQuestionIndex].answers.find(a => a.text === button.innerText).correct) {
+                button.classList.add("correct");
+            }
+        });
+        nextButton.style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            showQuestion();
+        } else {
+            questionElement.innerText = "모든 문제를 다 푸셨습니다! 고생하셨습니다.";
+            answerButtons.innerHTML = "";
+            feedbackElement.innerText = "";
+            nextButton.innerText = "처음으로 돌아가기";
+            nextButton.style.display = "block";
+            nextButton.onclick = startQuiz;
+        }
+    }
+
+    startQuiz();
+</script>
+
+</body>
+</html>
