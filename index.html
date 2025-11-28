@@ -5,31 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>사회복지학적 상상력 예상문제 25선</title>
     <style>
-        /* 선배 학우 스타일 따라잡기 */
+        /* 선배 학우 스타일 완벽 구현 */
         :root { --primary: #5c6ac4; --success-bg: #e6fffa; --success-text: #2c7a7b; --bg-gray: #f4f6f8; }
         body { font-family: 'Pretendard', 'Malgun Gothic', sans-serif; background-color: var(--bg-gray); margin: 0; display: flex; justify-content: center; min-height: 100vh; color: #333; }
         
         .container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
         
-        /* 상단 헤더 */
         .header { text-align: center; margin-bottom: 30px; }
         .main-title { font-size: 1.8rem; font-weight: 800; margin: 0; color: #1a202c; }
         .sub-title { font-size: 1rem; color: #718096; margin-top: 5px; }
 
-        /* 컨트롤 패널 (문제 번호, 버튼 등) */
         .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .status-badge { background: #ebf8ff; color: #3182ce; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
         .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
         .nav-btn:hover { background: #f7fafc; }
         .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* 문제 카드 */
         .quiz-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        
         .q-badge { display: inline-block; background: var(--primary); color: white; padding: 5px 10px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; margin-bottom: 15px; }
         .question-text { font-size: 1.25rem; font-weight: 700; line-height: 1.6; margin-bottom: 30px; word-break: keep-all; }
 
-        /* 보기 버튼 스타일 (스크린샷처럼 둥글고 큼직하게) */
         .options { display: flex; flex-direction: column; gap: 12px; }
         .option-btn { 
             text-align: left; padding: 18px 20px; background: white; 
@@ -38,18 +33,15 @@
         }
         .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #f0f4ff; }
         
-        /* 정답/오답 체크 후 스타일 */
         .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
         .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; }
 
-        /* 해설 박스 (초록색 박스) */
         .explanation-box { margin-top: 30px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 12px; padding: 20px; display: none; animation: slideDown 0.3s; }
         .exp-title { color: #2c7a7b; font-weight: 800; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
         .exp-text { color: #285e61; line-height: 1.6; font-size: 0.95rem; }
 
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* 모바일 최적화 */
+        
         @media (max-width: 480px) {
             .main-title { font-size: 1.5rem; }
             .quiz-card { padding: 20px; }
@@ -73,20 +65,19 @@
 
     <div class="quiz-card">
         <div class="q-badge">Q<span id="q-num">1</span>. 개념 확인</div>
-        <div class="question-text" id="question">문제가 로딩 중입니다...</div>
+        <div class="question-text" id="question">로딩 중...</div>
         
-        <div class="options" id="options-container">
-            </div>
+        <div class="options" id="options-container"></div>
 
         <div class="explanation-box" id="explanation-box">
-            <div class="exp-title">✅ 정답입니다! 잘 이해하고 있어요.</div>
-            <div class="exp-text" id="explanation-text">해설 내용</div>
+            <div class="exp-title">✅ 정답입니다!</div>
+            <div class="exp-text" id="explanation-text"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // 해민님이 만드신 25문제 데이터를 제가 미리 다 넣어뒀습니다! (건드리지 않으셔도 됩니다)
+    // 2번 문제 '일련의'로 수정 완료된 데이터입니다.
     const quizData = [
         {
             question: "1. 사회복지학적 상상력 과목을 개설한 주요 취지로 가장 적절한 것은?",
@@ -239,10 +230,9 @@
             explanation: "상상력은 '타성(습관)'에서 벗어나는 것에서 시작합니다. 타성을 강화하면 상상력은 죽습니다."
         }
     ];
-    // --- 작동 로직 (이제부터는 눈 감고도 만드실 수 있습니다) ---
+
+    // --- 작동 로직 (건드리지 마세요) ---
     let currentIdx = 0;
-    
-    // 요소 가져오기
     const questionEl = document.getElementById('question');
     const optionsEl = document.getElementById('options-container');
     const explanationBox = document.getElementById('explanation-box');
@@ -251,16 +241,11 @@
     const progressText = document.getElementById('progress-text');
     const qNum = document.getElementById('q-num');
 
-    // 퀴즈 시작!
     function loadQuestion() {
         const data = quizData[currentIdx];
-        
-        // 화면 업데이트
         qNum.innerText = currentIdx + 1;
         progressText.innerText = `${currentIdx + 1} / ${quizData.length} 문항`;
         questionEl.innerText = data.question;
-        
-        // 기존 보기 지우고 새로 만들기
         optionsEl.innerHTML = '';
         explanationBox.style.display = 'none';
 
@@ -275,11 +260,8 @@
 
     function checkAnswer(selectedIdx, btn) {
         const data = quizData[currentIdx];
-        const allBtns = document.querySelectorAll('.option-btn');
-        
-        // 중복 클릭 방지
         if(btn.parentElement.classList.contains('locked')) return;
-        btn.parentElement.classList.add('locked'); // 잠금 처리
+        btn.parentElement.classList.add('locked');
 
         if (selectedIdx === data.answer) {
             btn.classList.add('correct');
@@ -289,13 +271,13 @@
             explanationBox.style.borderColor = "#b2f5ea";
         } else {
             btn.classList.add('wrong');
-            allBtns[data.answer].classList.add('correct'); // 정답도 같이 보여주기
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns[data.answer].classList.add('correct');
             expTitle.innerHTML = "😅 아쉽네요. 다시 한번 확인해볼까요?";
             expTitle.style.color = "#c53030";
             explanationBox.style.background = "#fff5f5";
             explanationBox.style.borderColor = "#feb2b2";
         }
-        
         explanationText.innerText = data.explanation;
         explanationBox.style.display = 'block';
     }
@@ -318,7 +300,6 @@
         }
     }
 
-    // 첫 문제 로딩
     loadQuestion();
 </script>
 
