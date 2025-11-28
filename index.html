@@ -77,7 +77,6 @@
 </div>
 
 <script>
-    // 2번 문제 '일련의'로 수정 완료된 데이터입니다.
     const quizData = [
         {
             question: "1. 사회복지학적 상상력 과목을 개설한 주요 취지로 가장 적절한 것은?",
@@ -231,7 +230,6 @@
         }
     ];
 
-    // --- 작동 로직 (건드리지 마세요) ---
     let currentIdx = 0;
     const questionEl = document.getElementById('question');
     const optionsEl = document.getElementById('options-container');
@@ -240,6 +238,7 @@
     const expTitle = document.querySelector('.exp-title');
     const progressText = document.getElementById('progress-text');
     const qNum = document.getElementById('q-num');
+    const nextBtn = document.getElementById('next-btn');
 
     function loadQuestion() {
         const data = quizData[currentIdx];
@@ -248,6 +247,7 @@
         questionEl.innerText = data.question;
         optionsEl.innerHTML = '';
         explanationBox.style.display = 'none';
+        nextBtn.style.display = 'block';
 
         data.options.forEach((opt, idx) => {
             const btn = document.createElement('div');
@@ -289,19 +289,4 @@
         } else {
             alert("모든 문제를 다 푸셨습니다! 정말 고생하셨습니다.");
             currentIdx = 0;
-            loadQuestion();
-        }
-    }
-
-    function prevQuestion() {
-        if(currentIdx > 0) {
-            currentIdx--;
-            loadQuestion();
-        }
-    }
-
-    loadQuestion();
-</script>
-
-</body>
-</html>
+            loadQuestion
