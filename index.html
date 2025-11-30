@@ -17,11 +17,7 @@
             align-items: center; 
             min-height: 100vh; 
         }
-        .container { 
-            width: 100%; 
-            max-width: 600px; 
-            text-align: center; 
-        }
+        .container { width: 100%; max-width: 600px; text-align: center; }
         
         .title-box { 
             background: white; 
@@ -38,15 +34,12 @@
             line-height: 1.4; 
             word-break: keep-all;
         }
-        .sub-title { 
-            color: #718096; 
-            font-size: 1rem; 
-            font-weight: 500;
-        }
+        .sub-title { color: #718096; font-size: 1rem; font-weight: 500; }
         
+        /* 그리드 형태로 배치 (반응형) */
         .menu-list { 
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 반응형 그리드 */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 15px; 
         }
         .menu-btn { 
@@ -69,22 +62,10 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             border-color: #5c6ac4; 
         }
-        .menu-btn:active {
-            transform: translateY(-2px);
-        }
-        /* 비활성화 버튼 스타일 */
-        .menu-btn.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            pointer-events: none;
-            background-color: #e2e8f0; /* 회색 배경 */
-            color: #a0aec0;
-            box-shadow: none;
-        }
-        .menu-btn .emoji {
-            font-size: 1.2rem;
-            margin-right: 10px;
-        }
+        .menu-btn:active { transform: translateY(-2px); }
+        
+        .menu-btn .emoji { font-size: 1.2rem; margin-right: 10px; }
+        
         .badge { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; 
@@ -93,11 +74,6 @@
             font-size: 0.75rem;
             font-weight: 600;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-        .badge.coming-soon {
-            background: #cbd5e0;
-            color: #718096;
-            box-shadow: none;
         }
         
         .chicken-banner { 
@@ -112,10 +88,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             line-height: 1.6;
         }
-        @keyframes bounce { 
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-8px); } 
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        
         .footer { 
             margin-top: 30px; 
             color: rgba(255,255,255,0.8); 
@@ -123,11 +97,8 @@
             font-weight: 500;
         }
 
-        /* 반응형 */
         @media (max-width: 480px) {
-            .menu-list {
-                grid-template-columns: 1fr; /* 모바일에서는 1열로 */
-            }
+            .menu-list { grid-template-columns: 1fr; }
             .title-box { padding: 30px 20px; }
             .main-title { font-size: 1.5rem; }
             .sub-title { font-size: 0.9rem; }
@@ -148,25 +119,24 @@
         <a href="02.html" class="menu-btn"><span><span class="emoji">📗</span>제2강 문제 풀기</span><span class="badge">25문항</span></a>
         <a href="03.html" class="menu-btn"><span><span class="emoji">📕</span>제3강 문제 풀기</span><span class="badge">25문항</span></a>
         <a href="04.html" class="menu-btn"><span><span class="emoji">📙</span>제4강 문제 풀기</span><span class="badge">25문항</span></a>
-        
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제5강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제6강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제7강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제8강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제9강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제10강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제11강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제12강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제13강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제14강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
-        <div class="menu-btn disabled"><span><span class="emoji">📓</span>제15강 (준비중...)</span><span class="badge coming-soon">Lock</span></div>
+        <a href="05.html" class="menu-btn"><span><span class="emoji">📓</span>제5강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="06.html" class="menu-btn"><span><span class="emoji">📓</span>제6강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="07.html" class="menu-btn"><span><span class="emoji">📓</span>제7강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="08.html" class="menu-btn"><span><span class="emoji">📓</span>제8강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="09.html" class="menu-btn"><span><span class="emoji">📓</span>제9강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="10.html" class="menu-btn"><span><span class="emoji">📓</span>제10강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="11.html" class="menu-btn"><span><span class="emoji">📓</span>제11강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="12.html" class="menu-btn"><span><span class="emoji">📓</span>제12강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="13.html" class="menu-btn"><span><span class="emoji">📓</span>제13강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="14.html" class="menu-btn"><span><span class="emoji">📓</span>제14강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="15.html" class="menu-btn"><span><span class="emoji">📓</span>제15강 문제 풀기</span><span class="badge">25문항</span></a>
     </div>
     
     <div class="chicken-banner">
-        🍗 우리 모두 "치킨 장학금 이상"을 향하여! <br> 대/충 퐈이팅!
+        🍗 우리 모두 "치킨 장학금"을 향하여! <br> 대/충 퐈이팅!
     </div>
     
-    <div class="footer">Created by 유승욱</div>
+    <div class="footer">Created by 유승욱 (feat. 제미나이 싸부)</div>
 </div>
 </body>
 </html>
