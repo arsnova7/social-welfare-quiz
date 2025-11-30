@@ -3,30 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>대/충 학우들을 위한 사회복지학적 상상력</title>
+<title>대/충 학우들을 위한 사회복지학적 상상력 [1강]</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
     :root { --primary: #5c6ac4; --success-bg: #e6fffa; --success-text: #2c7a7b; --bg-gray: #f4f6f8; --warning: #d69e2e; }
     body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-gray); margin: 0; display: flex; justify-content: center; min-height: 100vh; color: #333; }
     .container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
     
-    .header { text-align: center; margin-bottom: 20px; }
+    /* 헤더 및 홈 버튼 */
+    .header { text-align: center; margin-bottom: 20px; position: relative; }
+    .home-btn { position: absolute; left: 0; top: 0; text-decoration: none; font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
+    .home-btn:hover { transform: scale(1.1); }
     
-    /* 기본 제목 크기 */
     .main-title { font-size: 1.5rem; font-weight: 800; color: #1a202c; margin: 0; line-height: 1.4; word-break: keep-all; }
     .sub-title { font-size: 1rem; color: #718096; margin-top: 10px; }
     
-    /* ★ 반응형 추가: 화면이 작은 스마트폰에서는 글씨 크기를 자동으로 줄임 */
-    @media (max-width: 480px) {
-        .main-title { font-size: 1.2rem; } /* 모바일에서는 조금 작게 */
-        .sub-title { font-size: 0.9rem; }
-        .quiz-card { padding: 20px; }
-    }
-    
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; }
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
+    .nav-btn:hover { background: #f7fafc; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
     
+    /* 퀴즈 카드 */
     .quiz-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     .q-badge { display: inline-block; background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; margin-bottom: 15px; }
     .question-text { font-size: 1.2rem; font-weight: 700; line-height: 1.5; margin-bottom: 20px; word-break: keep-all; }
@@ -36,40 +34,70 @@
     
     .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
-    
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
     .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
 
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
-    .exp-title { font-weight: 800; margin-bottom: 8px; display: block; }
+    .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: #2c7a7b; }
     .exp-text { font-size: 0.95rem; line-height: 1.5; }
+
+    /* 결과 화면 스타일 */
+    .result-card { background: white; border-radius: 20px; padding: 40px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; display: none; }
+    .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
+    .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
+    .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    .btn-group { display: flex; flex-direction: column; gap: 10px; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .btn-retry { background-color: var(--primary); color: white; }
+    .btn-retry:hover { background-color: #4a59a7; transform: translateY(-2px); }
+    .btn-home { background-color: #edf2f7; color: #2d3748; }
+    .btn-home:hover { background-color: #e2e8f0; transform: translateY(-2px); }
+
+    @media (max-width: 480px) { .main-title { font-size: 1.2rem; } .sub-title { font-size: 0.9rem; } .quiz-card { padding: 20px; } }
 </style>
 </head>
 <body>
-
 <div class="container">
     <div class="header">
-        <h1 class="main-title">대전/충남지역 25학번 학우들의<br>기말고사를 위한<br>사회복지학적 상상력 제1강</h1>
+        <a href="index.html" class="home-btn">🏠</a>
+        <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제1강</h1>
         <div class="sub-title">틀려도 괜찮아요! 2번의 기회가 있습니다.</div>
     </div>
-    <div class="control-panel">
-        <button class="nav-btn" onclick="prevQuestion()">이전</button>
-        <div class="status-badge" id="progress-text">1 / 25</div>
-        <button class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+
+    <div id="quiz-screen">
+        <div class="control-panel">
+            <button class="nav-btn" onclick="prevQuestion()">이전</button>
+            <div class="status-badge" id="progress-text">1 / 25</div>
+            <button class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+        </div>
+        <div class="quiz-card">
+            <div class="q-badge">Q<span id="q-num">1</span></div>
+            <div class="question-text" id="question">로딩 중...</div>
+            <div class="options" id="options-container"></div>
+            <div class="explanation-box" id="explanation-box">
+                <span class="exp-title">💡 해설</span>
+                <div class="exp-text" id="explanation-text"></div>
+            </div>
+        </div>
     </div>
-    <div class="quiz-card">
-        <div class="q-badge">Q<span id="q-num">1</span></div>
-        <div class="question-text" id="question">로딩 중...</div>
-        <div class="options" id="options-container"></div>
-        <div class="explanation-box" id="explanation-box">
-            <span class="exp-title"></span>
-            <div class="exp-text" id="explanation-text"></div>
+
+    <div id="result-screen" class="result-card">
+        <span class="result-emoji">🍗</span>
+        <h2 class="result-title">수고하셨습니다!</h2>
+        <p class="result-desc">
+            1강 문제를 모두 풀으셨습니다.<br>
+            준비 잘 하셔서 <strong>치킨 장학금</strong> 꼭 탑시다!<br>
+            대/충 퐈이팅! ㅎ
+        </p>
+        <div class="btn-group">
+            <button class="result-btn btn-retry" onclick="location.reload()">🔄 처음부터 다시 풀기</button>
+            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 다른 강의 풀러 가기</button>
         </div>
     </div>
 </div>
 
 <script>
-// 1강 데이터 (25문제)
+// 1강 문제 데이터 (25문제 - 어제 만든 것)
 const quizData = [
     {q:"1. 사회복지학적 상상력 과목을 개설한 주요 취지로 가장 적절한 것은?", o:["사회복지 서비스를 제공하는 효율적인 사례 관리 방법론을 연구하기 위함이다.", "사회 구조적인 틀에서 좋은 사회와 공동체를 만드는 방법을 고민하기 위함이다.", "사회복지 현장에서 즉각적으로 적용할 수 있는 구체적인 기술들을 습득하기 위함이다.", "불쌍하고 어려운 사람들의 개인적인 특성을 심층적으로 분석하기 위함이다."], a:1, e:"사회복지학에서는 단순히 서비스를 제공하는 것뿐만 아니라, 거시적인 틀에서 좋은 사회와 공동체를 만드는 방법을 고민하기 위해 사회학적 상상력이 필요합니다."},
     {q:"2. 강의에서 현대인이 '자신의 사생활이 일련의 올가미에 걸려 있다는 느낌'을 갖는 근본적인 원인은?", o:["개인의 일상과 사회의 거대한 역사적 변동 및 구조적 모순을 연결하여 사고하지 못하기 때문", "정부가 제공하는 정보의 양이 너무 적어 세상이 어떻게 돌아가는지 파악하기 어렵기 때문", "개인적인 생활 환경의 타성이 너무 깊어 일터를 벗어나 여가 생활을 누리지 못하기 때문", "현대 사회의 복잡성이 지나치게 증대되어 삶의 예측 가능성이 완전히 사라졌기 때문"], a:0, e:"현대인들은 개인의 일상과 거대한 사회 구조/역사를 연결하지 못하기 때문에, 보이지 않는 힘에 의해 올가미에 걸린 듯한 느낌을 받게 됩니다."},
@@ -108,6 +136,8 @@ const expText = document.getElementById('explanation-text');
 const expTitle = document.querySelector('.exp-title');
 const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
+const quizScreen = document.getElementById('quiz-screen');
+const resultScreen = document.getElementById('result-screen');
 
 function loadQuestion() {
     const d = quizData[curIdx];
@@ -130,11 +160,9 @@ function loadQuestion() {
 
 function checkAnswer(sel, btn) {
     const d = quizData[curIdx];
-    // 잠겨있거나 이미 틀린 버튼은 클릭 무시
     if (optContainer.classList.contains('locked') || btn.classList.contains('wrong')) return;
 
     if (sel === d.a) {
-        // 정답
         btn.classList.add('correct');
         optContainer.classList.add('locked');
         expTitle.innerText = "✅ 정답입니다! 아주 잘하셨어요.";
@@ -144,12 +172,10 @@ function checkAnswer(sel, btn) {
         expText.innerText = d.e;
         expBox.style.display = 'block';
     } else {
-        // 오답
         attempts++;
         btn.classList.add('wrong');
         
         if (attempts >= 2) {
-            // 두 번째 틀림 -> 정답 공개
             optContainer.classList.add('locked');
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns[d.a].classList.add('correct');
@@ -160,7 +186,6 @@ function checkAnswer(sel, btn) {
             expText.innerText = d.e;
             expBox.style.display = 'block';
         } else {
-            // 첫 번째 틀림 -> 경고
             expTitle.innerText = "⚠️ 오답입니다. 한 번 더 기회가 있어요! (1/2)";
             expTitle.style.color = "#d69e2e";
             expBox.style.background = "#fffaf0";
@@ -176,9 +201,8 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        alert("수고하셨습니다. 준비 잘 하셔서 치킨장학금이라도 탑시다. 대/충 퐈이팅! ㅎ");
-        curIdx = 0;
-        loadQuestion();
+        quizScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
     }
 }
 
