@@ -4,55 +4,100 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>대/충 학우들을 위한 사회복지학적 상상력 [2강]</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
     :root { --primary: #5c6ac4; --success-bg: #e6fffa; --success-text: #2c7a7b; --bg-gray: #f4f6f8; --warning: #d69e2e; }
     body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-gray); margin: 0; display: flex; justify-content: center; min-height: 100vh; color: #333; }
     .container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
-    .header { text-align: center; margin-bottom: 20px; }
+    
+    /* 헤더 및 홈 버튼 */
+    .header { text-align: center; margin-bottom: 20px; position: relative; }
+    .home-btn { position: absolute; left: 0; top: 0; text-decoration: none; font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
+    .home-btn:hover { transform: scale(1.1); }
+    
     .main-title { font-size: 1.5rem; font-weight: 800; color: #1a202c; margin: 0; line-height: 1.4; word-break: keep-all; }
     .sub-title { font-size: 1rem; color: #718096; margin-top: 10px; }
-    @media (max-width: 480px) { .main-title { font-size: 1.2rem; } .sub-title { font-size: 0.9rem; } .quiz-card { padding: 20px; } }
+    
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; }
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
+    .nav-btn:hover { background: #f7fafc; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    
+    /* 퀴즈 카드 */
     .quiz-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     .q-badge { display: inline-block; background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; margin-bottom: 15px; }
     .question-text { font-size: 1.2rem; font-weight: 700; line-height: 1.5; margin-bottom: 20px; word-break: keep-all; }
+    
     .options { display: flex; flex-direction: column; gap: 10px; }
     .options.locked { pointer-events: none; opacity: 0.9; }
+    
     .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
     .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
+
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
-    .exp-title { font-weight: 800; margin-bottom: 8px; display: block; }
+    .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: #2c7a7b; }
     .exp-text { font-size: 0.95rem; line-height: 1.5; }
+
+    /* 결과 화면 스타일 */
+    .result-card { background: white; border-radius: 20px; padding: 40px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; display: none; }
+    .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
+    .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
+    .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    .btn-group { display: flex; flex-direction: column; gap: 10px; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .btn-retry { background-color: var(--primary); color: white; }
+    .btn-retry:hover { background-color: #4a59a7; transform: translateY(-2px); }
+    .btn-home { background-color: #edf2f7; color: #2d3748; }
+    .btn-home:hover { background-color: #e2e8f0; transform: translateY(-2px); }
+
+    @media (max-width: 480px) { .main-title { font-size: 1.2rem; } .sub-title { font-size: 0.9rem; } .quiz-card { padding: 20px; } }
 </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1 class="main-title">대전/충남지역 25학번 학우들의<br>기말고사를 위한<br>사회복지학적 상상력 제2강</h1>
+        <a href="index.html" class="home-btn">🏠</a>
+        <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제2강</h1>
         <div class="sub-title">틀려도 괜찮아요! 2번의 기회가 있습니다.</div>
     </div>
-    <div class="control-panel">
-        <button class="nav-btn" onclick="prevQuestion()">이전</button>
-        <div class="status-badge" id="progress-text">1 / 25</div>
-        <button class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+
+    <div id="quiz-screen">
+        <div class="control-panel">
+            <button class="nav-btn" onclick="prevQuestion()">이전</button>
+            <div class="status-badge" id="progress-text">1 / 25</div>
+            <button class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+        </div>
+        <div class="quiz-card">
+            <div class="q-badge">Q<span id="q-num">1</span></div>
+            <div class="question-text" id="question">로딩 중...</div>
+            <div class="options" id="options-container"></div>
+            <div class="explanation-box" id="explanation-box">
+                <span class="exp-title">💡 해설</span>
+                <div class="exp-text" id="explanation-text"></div>
+            </div>
+        </div>
     </div>
-    <div class="quiz-card">
-        <div class="q-badge">Q<span id="q-num">1</span></div>
-        <div class="question-text" id="question">로딩 중...</div>
-        <div class="options" id="options-container"></div>
-        <div class="explanation-box" id="explanation-box">
-            <span class="exp-title"></span>
-            <div class="exp-text" id="explanation-text"></div>
+
+    <div id="result-screen" class="result-card">
+        <span class="result-emoji">🍗</span>
+        <h2 class="result-title">수고하셨습니다!</h2>
+        <p class="result-desc">
+            2강 문제를 모두 풀으셨습니다.<br>
+            준비 잘 하셔서 <strong>치킨 장학금</strong> 꼭 탑시다!<br>
+            대/충 퐈이팅! ㅎ
+        </p>
+        <div class="btn-group">
+            <button class="result-btn btn-retry" onclick="location.reload()">🔄 처음부터 다시 풀기</button>
+            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 다른 강의 풀러 가기</button>
         </div>
     </div>
 </div>
+
 <script>
-// 2강 문제 데이터 (25문제)
+// 2강 문제 데이터 (25문제 전체 포함)
 const quizData = [
     {q:"1. 사회과학이 등장하게 된 배경과 관련된 중세 시대의 특징에 대한 설명으로 가장 적절한 것은?", o:["과학적 질문 자체가 불경하게 여겨졌다.", "사회 변동이 극심하여 예측 가능성이 높았다.", "인간 중심의 세계관이 지배적이었다.", "모든 현상을 자연 과학의 방법으로 설명하고자 했다."], a:0, e:"중세 시대는 신 중심의 세계관이었기 때문에, 과학처럼 현상에 대해 '왜 그럴까?'라고 원인을 찾아 질문하는 행위 자체가 신의 뜻에 대한 불경으로 여겨져 과학이 등장할 힘이 없었다."},
     {q:"2. 중세에서 근대로 넘어가는 시기에 나타난 주요 정치적 변동이 아닌 것은?", o:["시민 계급의 등장", "절대 왕권주의의 강화", "영국의 명예 혁명과 프랑스의 시민 혁명", "민주주의와 사회 계약론에 대한 의식 형성"], a:1, e:"중세 봉건제 사회에서 시민 혁명(영국 명예 혁명, 프랑스 시민 혁명)이 발생하면서 절대 왕권주의가 아닌 민주주의적 근대 국가가 등장하게 되었고, 시민 계급이 형성되었다."},
@@ -91,6 +136,8 @@ const expText = document.getElementById('explanation-text');
 const expTitle = document.querySelector('.exp-title');
 const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
+const quizScreen = document.getElementById('quiz-screen');
+const resultScreen = document.getElementById('result-screen');
 
 function loadQuestion() {
     const d = quizData[curIdx];
@@ -154,9 +201,8 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        alert("수고하셨습니다. 준비 잘 하셔서 치킨장학금이라도 탑시다. 대/충 퐈이팅! ㅎ");
-        curIdx = 0;
-        loadQuestion();
+        quizScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
     }
 }
 
