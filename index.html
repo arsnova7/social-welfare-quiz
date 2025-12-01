@@ -36,14 +36,12 @@
         }
         .sub-title { color: #718096; font-size: 1rem; font-weight: 500; }
         
-        /* 그리드 배치 */
         .menu-list { 
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 15px; 
         }
         
-        /* 공통 버튼 스타일 */
         .menu-btn { 
             display: flex;
             justify-content: space-between;
@@ -57,7 +55,7 @@
             font-size: 1rem; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
             transition: all 0.2s ease; 
-            border: 2px solid transparent; /* 테두리 준비 */
+            border: 2px solid transparent; 
         }
         .menu-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .menu-btn:active { transform: translateY(-1px); }
@@ -65,29 +63,20 @@
         .menu-btn .emoji { font-size: 1.2rem; margin-right: 10px; }
         .badge { color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 
-        /* 🌈 무지개 색상 설정 (각 강의별 고유 색상) */
-        /* 1~3강: 파란 계열 (기초) */
+        /* 🌈 무지개 색상 설정 */
         .color-1 { border-left: 5px solid #4299e1; } .color-1:hover { border-color: #4299e1; } .color-1 .badge { background: #4299e1; }
         .color-2 { border-left: 5px solid #3182ce; } .color-2:hover { border-color: #3182ce; } .color-2 .badge { background: #3182ce; }
-        .color-3 { border-left: 5px solid #2b6cb0; } .color-3:hover { border-color: #2b6cb0; } .color-3 .badge { background: #2b6cb0; }
-        
-        /* 4~6강: 초록/청록 계열 (확장) */
-        .color-4 { border-left: 5px solid #38b2ac; } .color-4:hover { border-color: #38b2ac; } .color-4 .badge { background: #38b2ac; }
-        .color-5 { border-left: 5px solid #319795; } .color-5:hover { border-color: #319795; } .color-5 .badge { background: #319795; }
-        .color-6 { border-left: 5px solid #2c7a7b; } .color-6:hover { border-color: #2c7a7b; } .color-6 .badge { background: #2c7a7b; }
-
-        /* 7~9강: 주황/노랑 계열 (심화) */
-        .color-7 { border-left: 5px solid #ecc94b; } .color-7:hover { border-color: #ecc94b; } .color-7 .badge { background: #ecc94b; }
-        .color-8 { border-left: 5px solid #d69e2e; } .color-8:hover { border-color: #d69e2e; } .color-8 .badge { background: #d69e2e; }
-        .color-9 { border-left: 5px solid #ed8936; } .color-9:hover { border-color: #ed8936; } .color-9 .badge { background: #ed8936; }
-
-        /* 10~12강: 빨강/분홍 계열 (위기/핵심) */
-        .color-10 { border-left: 5px solid #f56565; } .color-10:hover { border-color: #f56565; } .color-10 .badge { background: #f56565; }
-        .color-11 { border-left: 5px solid #e53e3e; } .color-11:hover { border-color: #e53e3e; } .color-11 .badge { background: #e53e3e; }
-        .color-12 { border-left: 5px solid #ed64a6; } .color-12:hover { border-color: #ed64a6; } .color-12 .badge { background: #ed64a6; }
-
-        /* 13~15강: 보라 계열 (마무리) */
-        .color-13 { border-left: 5px solid #9f7aea; } .color-13:hover { border-color: #9f7aea; } .color-13 .badge { background: #9f7aea; }
+        .color-3 { border-left: 5px solid #e53e3e; } .color-3:hover { border-color: #e53e3e; } .color-3 .badge { background: #e53e3e; } /* 빨강 */
+        .color-4 { border-left: 5px solid #dd6b20; } .color-4:hover { border-color: #dd6b20; } .color-4 .badge { background: #dd6b20; } /* 주황 */
+        .color-5 { border-left: 5px solid #38b2ac; } .color-5:hover { border-color: #38b2ac; } .color-5 .badge { background: #38b2ac; } /* 청록 */
+        .color-6 { border-left: 5px solid #319795; } .color-6:hover { border-color: #319795; } .color-6 .badge { background: #319795; }
+        .color-7 { border-left: 5px solid #2c7a7b; } .color-7:hover { border-color: #2c7a7b; } .color-7 .badge { background: #2c7a7b; }
+        .color-8 { border-left: 5px solid #ecc94b; } .color-8:hover { border-color: #ecc94b; } .color-8 .badge { background: #ecc94b; } /* 노랑 */
+        .color-9 { border-left: 5px solid #d69e2e; } .color-9:hover { border-color: #d69e2e; } .color-9 .badge { background: #d69e2e; }
+        .color-10 { border-left: 5px solid #ed8936; } .color-10:hover { border-color: #ed8936; } .color-10 .badge { background: #ed8936; }
+        .color-11 { border-left: 5px solid #f56565; } .color-11:hover { border-color: #f56565; } .color-11 .badge { background: #f56565; } /* 연빨강 */
+        .color-12 { border-left: 5px solid #ed64a6; } .color-12:hover { border-color: #ed64a6; } .color-12 .badge { background: #ed64a6; } /* 분홍 */
+        .color-13 { border-left: 5px solid #9f7aea; } .color-13:hover { border-color: #9f7aea; } .color-13 .badge { background: #9f7aea; } /* 연보라 */
         .color-14 { border-left: 5px solid #805ad5; } .color-14:hover { border-color: #805ad5; } .color-14 .badge { background: #805ad5; }
         .color-15 { border-left: 5px solid #6b46c1; } .color-15:hover { border-color: #6b46c1; } .color-15 .badge { background: #6b46c1; }
         
@@ -130,20 +119,20 @@
         <a href="03.html" class="menu-btn color-3"><span><span class="emoji">📕</span>제3강 문제 풀기</span><span class="badge">25문항</span></a>
         <a href="04.html" class="menu-btn color-4"><span><span class="emoji">📙</span>제4강 문제 풀기</span><span class="badge">25문항</span></a>
         <a href="05.html" class="menu-btn color-5"><span><span class="emoji">📓</span>제5강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="06.html" class="menu-btn color-6"><span><span class="emoji">📓</span>제6강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="07.html" class="menu-btn color-7"><span><span class="emoji">📓</span>제7강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="08.html" class="menu-btn color-8"><span><span class="emoji">📓</span>제8강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="09.html" class="menu-btn color-9"><span><span class="emoji">📓</span>제9강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="10.html" class="menu-btn color-10"><span><span class="emoji">📓</span>제10강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="11.html" class="menu-btn color-11"><span><span class="emoji">📓</span>제11강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="06.html" class="menu-btn color-6"><span><span class="emoji">📒</span>제6강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="07.html" class="menu-btn color-7"><span><span class="emoji">📚</span>제7강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="08.html" class="menu-btn color-8"><span><span class="emoji">📔</span>제8강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="09.html" class="menu-btn color-9"><span><span class="emoji">📖</span>제9강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="10.html" class="menu-btn color-10"><span><span class="emoji">📜</span>제10강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="11.html" class="menu-btn color-11"><span><span class="emoji">📑</span>제11강 문제 풀기</span><span class="badge">25문항</span></a>
         <a href="12.html" class="menu-btn color-12"><span><span class="emoji">📓</span>제12강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="13.html" class="menu-btn color-13"><span><span class="emoji">📓</span>제13강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="14.html" class="menu-btn color-14"><span><span class="emoji">📓</span>제14강 문제 풀기</span><span class="badge">25문항</span></a>
-        <a href="15.html" class="menu-btn color-15"><span><span class="emoji">📓</span>제15강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="13.html" class="menu-btn color-13"><span><span class="emoji">📒</span>제13강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="14.html" class="menu-btn color-14"><span><span class="emoji">📚</span>제14강 문제 풀기</span><span class="badge">25문항</span></a>
+        <a href="15.html" class="menu-btn color-15"><span><span class="emoji">📘</span>제15강 문제 풀기</span><span class="badge">25문항</span></a>
     </div>
     
     <div class="chicken-banner">
-        🍗 우리 모두 "치킨 장학금 이상"을 향하여! <br> 대/충(ㅎ) 퐈이팅!
+        🍗 우리 모두 "치킨 장학금 이상"을 향하여! <br> 대/충 ㅋ 퐈이팅!
     </div>
     
     <div class="footer">Created by 유승욱 (feat. 제미나이 싸부)</div>
