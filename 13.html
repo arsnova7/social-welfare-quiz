@@ -6,7 +6,6 @@
 <title>대/충 학우들을 위한 사회복지학적 상상력 [13강]</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
-    /* ① CSS 변수 최적화 */
     :root { 
         --primary: #5c6ac4; 
         --success-bg: #e6fffa; 
@@ -27,8 +26,7 @@
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
     
-    /* ③ 버튼 스타일 개선 */
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; font-family: inherit; }
     .nav-btn:hover:not(:disabled) { background: #f7fafc; }
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #eee; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -40,11 +38,28 @@
     .options { display: flex; flex-direction: column; gap: 10px; }
     .options.locked { pointer-events: none; opacity: 0.9; }
     
-    .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
+    .option-btn { 
+        text-align: left; 
+        padding: 15px; 
+        background: white; 
+        border: 2px solid #e2e8f0; 
+        border-radius: 10px; 
+        font-size: 1rem; 
+        color: #4a5568; 
+        cursor: pointer; 
+        transition: 0.2s; 
+        width: 100%; 
+        font-family: inherit; 
+    }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
+    .option-btn:active { background-color: #e0e7ff; transform: scale(0.98); }
+    
+    /* 정답/오답 스타일 개선 */
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
-    .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
+    .option-btn.user-selected-wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; font-weight: bold; }
+    .option-btn.wrong { opacity: 0.7; } /* 시스템상 오답 처리 */
 
+    /* 접근성: 스크린리더가 동적 변화를 읽도록 설정 */
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
     .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: var(--success-text); }
     .exp-text { font-size: 0.95rem; line-height: 1.5; }
@@ -57,8 +72,12 @@
     .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
     .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
     .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    
+    .score-highlight { color: #2c7a7b; font-weight: 900; font-size: 1.3rem; }
+    .score-wrong { color: #e53e3e; font-weight: 900; }
+
     .btn-group { display: flex; flex-direction: column; gap: 10px; }
-    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; font-family: inherit; }
     .btn-retry { background-color: var(--primary); color: white; }
     .btn-home { background-color: #edf2f7; color: #2d3748; }
 
@@ -68,28 +87,28 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="index.html" class="home-btn">🏠</a>
+        <a href="index.html" class="home-btn" aria-label="홈으로 이동">🏠</a>
         <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제13강</h1>
         <div class="sub-title">틀려도 괜찮아요! 힌트가 나옵니다.</div>
     </div>
 
     <div id="quiz-screen">
         <div class="control-panel">
-            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()">이전</button>
-            <div class="status-badge" id="progress-text">1 / 25</div>
-            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()" aria-label="이전 문제">이전</button>
+            <div class="status-badge" id="progress-text" aria-live="polite">1 / 25</div>
+            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()" aria-label="다음 문제">다음</button>
         </div>
         <div class="quiz-card">
             <div class="q-badge">Q<span id="q-num">1</span></div>
             <div class="question-text" id="question">로딩 중...</div>
             <div class="options" id="options-container"></div>
             
-            <div class="hint-box" id="hint-box">
+            <div class="hint-box" id="hint-box" role="alert" aria-live="polite">
                 <span class="hint-title">💡 힌트</span>
                 <div class="hint-text" id="hint-text"></div>
             </div>
 
-            <div class="explanation-box" id="explanation-box">
+            <div class="explanation-box" id="explanation-box" role="alert" aria-live="polite">
                 <span class="exp-title">✅ 정답 및 해설</span>
                 <div class="exp-text" id="explanation-text"></div>
             </div>
@@ -99,14 +118,12 @@
     <div id="result-screen" class="result-card">
         <span class="result-emoji">🍗</span>
         <h2 class="result-title">수고하셨습니다!</h2>
-        <p class="result-desc">
-            13강 문제를 모두 풀으셨습니다.<br>
-            준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
-            대/충 ㅋ 퐈이팅! ㅎ
+        <p class="result-desc" id="score-result-text">
+            결과를 계산 중입니다...
         </p>
         <div class="btn-group">
-            <button class="result-btn btn-retry" onclick="location.reload()">🔄 처음부터 다시 풀기</button>
-            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 다른 강의 풀러 가기</button>
+            <button type="button" class="result-btn btn-retry" onclick="location.reload()">🔄 13강 다시 풀기</button>
+            <button type="button" class="result-btn btn-home" onclick="location.href='index.html'">🏠 전체 목록으로</button>
         </div>
     </div>
 </div>
@@ -143,6 +160,8 @@ const quizData = [
 
 let curIdx = 0;
 let attempts = 0;
+// 점수 및 상태 관리 (null: 미응시, true: 정답, false: 오답)
+let userResults = new Array(quizData.length).fill(null);
 
 const qEl = document.getElementById('question');
 const optContainer = document.getElementById('options-container');
@@ -154,10 +173,13 @@ const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
 const quizScreen = document.getElementById('quiz-screen');
 const resultScreen = document.getElementById('result-screen');
+const scoreResultText = document.getElementById('score-result-text');
 
 function loadQuestion() {
     const d = quizData[curIdx];
     attempts = 0; 
+    
+    // UI 초기화
     qNum.innerText = curIdx + 1;
     progText.innerText = `${curIdx + 1} / ${quizData.length}`;
     qEl.innerText = d.q;
@@ -166,40 +188,83 @@ function loadQuestion() {
     expBox.style.display = 'none';
     hintBox.style.display = 'none';
     
-    // ③ 접근성 및 ④ 오타 수정
     const prevBtn = document.getElementById('prev-btn');
     if (prevBtn) prevBtn.disabled = curIdx === 0;
 
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = (curIdx === quizData.length - 1) ? "결과 보기" : "다음";
+    nextBtn.classList.remove('active');
+    
+    // 네비게이션으로 돌아왔을 때, 이미 푼 문제라면 상태 복원
+    const isSolved = userResults[curIdx] !== null;
+
     d.o.forEach((opt, i) => {
-        const btn = document.createElement('div');
-        btn.classList.add('option-btn');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn';
         btn.innerText = opt;
         btn.onclick = () => checkAnswer(i, btn);
+        
+        // 이미 푼 문제라면 정답 표시 및 잠금
+        if (isSolved) {
+            optContainer.classList.add('locked');
+            if (i === d.a) {
+                btn.classList.add('correct');
+            }
+            btn.setAttribute('aria-disabled', 'true');
+        }
         optContainer.appendChild(btn);
     });
+
+    // 이미 푼 문제라면 해설 바로 보여주기
+    if (isSolved) {
+        expText.innerText = d.e;
+        expBox.style.display = 'block';
+        nextBtn.classList.add('active'); // 다음 버튼 활성화
+    }
 }
 
-// ⑤ 중복 코드 최적화
 function showCorrectAnswer(answerIdx, explanation) {
     const allBtns = document.querySelectorAll('.option-btn');
     allBtns[answerIdx].classList.add('correct');
+    
+    // 모든 버튼 비활성화 처리 (접근성)
+    allBtns.forEach(btn => btn.setAttribute('aria-disabled', 'true'));
+    
     optContainer.classList.add('locked');
     hintBox.style.display = 'none';
     expText.innerText = explanation;
     expBox.style.display = 'block';
+    
+    document.getElementById('next-btn').classList.add('active');
 }
 
 function checkAnswer(sel, btn) {
     const d = quizData[curIdx];
-    if (optContainer.classList.contains('locked') || btn.classList.contains('wrong')) return;
+    if (!d) return; 
+
+    // 이미 풀었거나(locked) 오답처리된 버튼은 클릭 방지
+    if (optContainer.classList.contains('locked') || btn.classList.contains('user-selected-wrong')) return;
 
     if (sel === d.a) {
+        // 정답
         btn.classList.add('correct');
+        
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = true; // 점수 획득
+        }
+
         showCorrectAnswer(d.a, d.e);
     } else {
+        // 오답
         attempts++;
-        btn.classList.add('wrong');
+        btn.classList.add('user-selected-wrong');
         
+        // 첫 틀림 시, 이 문제는 점수 획득 실패로 기록
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = false; 
+        }
+
         if (attempts >= 2) {
             showCorrectAnswer(d.a, d.e);
         } else {
@@ -214,8 +279,7 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        quizScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+        showResult();
     }
 }
 
@@ -226,6 +290,23 @@ function prevQuestion() {
     }
 }
 
+function showResult() {
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    
+    // 점수 계산: userResults 배열에서 true인 것만 카운트
+    const finalScore = userResults.filter(r => r === true).length;
+    const wrongCount = quizData.length - finalScore;
+
+    scoreResultText.innerHTML = `
+        총 ${quizData.length}문제 중 <span class="score-highlight">${finalScore}문제</span>를 맞추셨습니다!<br>
+        (틀린 문제: <span class="score-wrong">${wrongCount}개</span>)<br><br>
+        준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
+        대/충 ㅋ 퐈이팅! ㅎ
+    `;
+}
+
+// 초기화 실행
 loadQuestion();
 </script>
 </body>

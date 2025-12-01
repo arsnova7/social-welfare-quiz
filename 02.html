@@ -6,7 +6,13 @@
 <title>대/충 학우들을 위한 사회복지학적 상상력 [2강]</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
-    :root { --primary: #5c6ac4; --success-bg: #e6fffa; --success-text: #2c7a7b; --bg-gray: #f4f6f8; --warning: #d69e2e; }
+    :root { 
+        --primary: #5c6ac4; 
+        --success-bg: #e6fffa; 
+        --success-text: #2c7a7b;
+        --bg-gray: #f4f6f8; 
+        --warning: #d69e2e;
+    }
     body { font-family: 'Pretendard', sans-serif; background-color: var(--bg-gray); margin: 0; display: flex; justify-content: center; min-height: 100vh; color: #333; }
     .container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
     
@@ -19,8 +25,10 @@
     
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
-    .nav-btn:hover { background: #f7fafc; }
+    
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; font-family: inherit; }
+    .nav-btn:hover:not(:disabled) { background: #f7fafc; }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #eee; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
     
     .quiz-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -30,27 +38,46 @@
     .options { display: flex; flex-direction: column; gap: 10px; }
     .options.locked { pointer-events: none; opacity: 0.9; }
     
-    .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
+    .option-btn { 
+        text-align: left; 
+        padding: 15px; 
+        background: white; 
+        border: 2px solid #e2e8f0; 
+        border-radius: 10px; 
+        font-size: 1rem; 
+        color: #4a5568; 
+        cursor: pointer; 
+        transition: 0.2s; 
+        width: 100%; 
+        font-family: inherit; 
+    }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
+    .option-btn:active { background-color: #e0e7ff; transform: scale(0.98); }
+    
+    /* 정답/오답 스타일 개선 */
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
-    .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
+    .option-btn.user-selected-wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; font-weight: bold; }
+    .option-btn.wrong { opacity: 0.7; } /* 시스템상 오답 처리 */
 
-    /* 해설 박스 */
+    /* 접근성: 스크린리더가 동적 변화를 읽도록 설정 */
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
-    .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: #2c7a7b; }
+    .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: var(--success-text); }
     .exp-text { font-size: 0.95rem; line-height: 1.5; }
 
-    /* 힌트 박스 (노란색) */
     .hint-box { margin-top: 20px; background: #fffaf0; border: 1px solid #fbd38d; border-radius: 10px; padding: 15px; display: none; }
-    .hint-title { font-weight: 800; margin-bottom: 8px; display: block; color: #d69e2e; }
+    .hint-title { font-weight: 800; margin-bottom: 8px; display: block; color: var(--warning); }
     .hint-text { font-size: 0.95rem; line-height: 1.5; color: #744210; }
 
     .result-card { background: white; border-radius: 20px; padding: 40px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; display: none; }
     .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
     .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
     .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    
+    .score-highlight { color: #2c7a7b; font-weight: 900; font-size: 1.3rem; }
+    .score-wrong { color: #e53e3e; font-weight: 900; }
+
     .btn-group { display: flex; flex-direction: column; gap: 10px; }
-    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; font-family: inherit; }
     .btn-retry { background-color: var(--primary); color: white; }
     .btn-home { background-color: #edf2f7; color: #2d3748; }
 
@@ -60,28 +87,28 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="index.html" class="home-btn">🏠</a>
+        <a href="index.html" class="home-btn" aria-label="홈으로 이동">🏠</a>
         <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제2강</h1>
         <div class="sub-title">틀려도 괜찮아요! 힌트가 나옵니다.</div>
     </div>
 
     <div id="quiz-screen">
         <div class="control-panel">
-            <button class="nav-btn" onclick="prevQuestion()">이전</button>
-            <div class="status-badge" id="progress-text">1 / 25</div>
-            <button class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()" aria-label="이전 문제">이전</button>
+            <div class="status-badge" id="progress-text" aria-live="polite">1 / 25</div>
+            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()" aria-label="다음 문제">다음</button>
         </div>
         <div class="quiz-card">
             <div class="q-badge">Q<span id="q-num">1</span></div>
             <div class="question-text" id="question">로딩 중...</div>
             <div class="options" id="options-container"></div>
             
-            <div class="hint-box" id="hint-box">
+            <div class="hint-box" id="hint-box" role="alert" aria-live="polite">
                 <span class="hint-title">💡 힌트</span>
                 <div class="hint-text" id="hint-text"></div>
             </div>
 
-            <div class="explanation-box" id="explanation-box">
+            <div class="explanation-box" id="explanation-box" role="alert" aria-live="polite">
                 <span class="exp-title">✅ 정답 및 해설</span>
                 <div class="exp-text" id="explanation-text"></div>
             </div>
@@ -91,20 +118,18 @@
     <div id="result-screen" class="result-card">
         <span class="result-emoji">🍗</span>
         <h2 class="result-title">수고하셨습니다!</h2>
-        <p class="result-desc">
-            2강 문제를 모두 풀으셨습니다.<br>
-            준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 받읍시다!<br>
-            대/충 ㅋ 퐈이팅! ㅎ
+        <p class="result-desc" id="score-result-text">
+            결과를 계산 중입니다...
         </p>
         <div class="btn-group">
-            <button class="result-btn btn-retry" onclick="location.reload()">🔄 처음부터 다시 풀기</button>
-            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 다른 강의 풀러 가기</button>
+            <button type="button" class="result-btn btn-retry" onclick="location.reload()">🔄 2강 다시 풀기</button>
+            <button type="button" class="result-btn btn-home" onclick="location.href='index.html'">🏠 전체 목록으로</button>
         </div>
     </div>
 </div>
 
 <script>
-// 2강 데이터 (25문제 - 힌트 포함)
+// 2강 데이터 (25문제)
 const quizData = [
     {q:"사회과학이 등장하게 된 배경과 관련된 중세 시대의 특징에 대한 설명으로 가장 적절한 것은?", o:["과학적 질문 자체가 불경하게 여겨졌다.", "사회 변동이 극심하여 예측 가능성이 높았다.", "인간 중심의 세계관이 지배적이었다.", "모든 현상을 자연 과학의 방법으로 설명하고자 했다."], a:0, h:"중세 시대는 신 중심의 세계관이었습니다.", e:"중세 시대는 신 중심의 세계관이었기 때문에, 과학처럼 현상에 대해 '왜 그럴까?'라고 원인을 찾아 질문하는 행위 자체가 신의 뜻에 대한 불경으로 여겨져 과학이 등장할 힘이 없었다."},
     {q:"중세에서 근대로 넘어가는 시기에 나타난 주요 정치적 변동이 아닌 것은?", o:["시민 계급의 등장", "절대 왕권주의의 강화", "영국의 명예 혁명과 프랑스의 시민 혁명", "민주주의와 사회 계약론에 대한 의식 형성"], a:1, h:"중세 봉건제 사회에서 시민 혁명이 발생하면서 등장한 국가 형태를 생각해보세요.", e:"중세 봉건제 사회에서 시민 혁명(영국 명예 혁명, 프랑스 시민 혁명)이 발생하면서 절대 왕권주의가 아닌 민주주의적 근대 국가가 등장하게 되었고, 시민 계급이 형성되었다."},
@@ -135,6 +160,8 @@ const quizData = [
 
 let curIdx = 0;
 let attempts = 0;
+// 개선된 로직: 각 문제의 결과 상태를 저장 (null: 미응시, true: 정답, false: 오답)
+let userResults = new Array(quizData.length).fill(null);
 
 const qEl = document.getElementById('question');
 const optContainer = document.getElementById('options-container');
@@ -146,10 +173,13 @@ const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
 const quizScreen = document.getElementById('quiz-screen');
 const resultScreen = document.getElementById('result-screen');
+const scoreResultText = document.getElementById('score-result-text');
 
 function loadQuestion() {
     const d = quizData[curIdx];
     attempts = 0; 
+    
+    // UI 초기화
     qNum.innerText = curIdx + 1;
     progText.innerText = `${curIdx + 1} / ${quizData.length}`;
     qEl.innerText = d.q;
@@ -157,36 +187,86 @@ function loadQuestion() {
     optContainer.classList.remove('locked');
     expBox.style.display = 'none';
     hintBox.style.display = 'none';
+    
+    const prevBtn = document.getElementById('prev-btn');
+    if (prevBtn) prevBtn.disabled = curIdx === 0;
+
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = (curIdx === quizData.length - 1) ? "결과 보기" : "다음";
+    nextBtn.classList.remove('active');
+    
+    // 네비게이션으로 돌아왔을 때, 이미 푼 문제라면 상태 복원
+    const isSolved = userResults[curIdx] !== null;
 
     d.o.forEach((opt, i) => {
-        const btn = document.createElement('div');
-        btn.classList.add('option-btn');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn';
         btn.innerText = opt;
         btn.onclick = () => checkAnswer(i, btn);
+        
+        // 이미 푼 문제라면 정답 표시 및 잠금
+        if (isSolved) {
+            optContainer.classList.add('locked');
+            if (i === d.a) {
+                btn.classList.add('correct');
+            }
+            btn.setAttribute('aria-disabled', 'true');
+        }
         optContainer.appendChild(btn);
     });
+
+    // 이미 푼 문제라면 해설 바로 보여주기
+    if (isSolved) {
+        expText.innerText = d.e;
+        expBox.style.display = 'block';
+        nextBtn.classList.add('active'); // 다음 버튼 활성화
+    }
+}
+
+function showCorrectAnswer(answerIdx, explanation) {
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns[answerIdx].classList.add('correct');
+    
+    // 모든 버튼 비활성화 처리 (접근성)
+    allBtns.forEach(btn => btn.setAttribute('aria-disabled', 'true'));
+    
+    optContainer.classList.add('locked');
+    hintBox.style.display = 'none';
+    expText.innerText = explanation;
+    expBox.style.display = 'block';
+    
+    document.getElementById('next-btn').classList.add('active');
 }
 
 function checkAnswer(sel, btn) {
     const d = quizData[curIdx];
-    if (optContainer.classList.contains('locked') || btn.classList.contains('wrong')) return;
+    if (!d) return; 
+
+    // 이미 풀었거나(locked) 오답처리된 버튼은 클릭 방지
+    if (optContainer.classList.contains('locked') || btn.classList.contains('user-selected-wrong')) return;
 
     if (sel === d.a) {
+        // 정답
         btn.classList.add('correct');
-        optContainer.classList.add('locked');
-        hintBox.style.display = 'none';
-        expText.innerText = d.e;
-        expBox.style.display = 'block';
+        
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = true; // 점수 획득
+        }
+
+        showCorrectAnswer(d.a, d.e);
     } else {
+        // 오답
         attempts++;
-        btn.classList.add('wrong');
+        btn.classList.add('user-selected-wrong');
+        
+        // 첫 틀림 시, 이 문제는 점수 획득 실패로 기록
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = false; 
+        }
+
         if (attempts >= 2) {
-            optContainer.classList.add('locked');
-            hintBox.style.display = 'none';
-            const allBtns = document.querySelectorAll('.option-btn');
-            allBtns[d.a].classList.add('correct');
-            expText.innerText = d.e;
-            expBox.style.display = 'block';
+            showCorrectAnswer(d.a, d.e);
         } else {
             hintText.innerText = d.h;
             hintBox.style.display = 'block';
@@ -199,8 +279,7 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        quizScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+        showResult();
     }
 }
 
@@ -211,6 +290,23 @@ function prevQuestion() {
     }
 }
 
+function showResult() {
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    
+    // 점수 계산: userResults 배열에서 true인 것만 카운트
+    const finalScore = userResults.filter(r => r === true).length;
+    const wrongCount = quizData.length - finalScore;
+
+    scoreResultText.innerHTML = `
+        총 ${quizData.length}문제 중 <span class="score-highlight">${finalScore}문제</span>를 맞추셨습니다!<br>
+        (틀린 문제: <span class="score-wrong">${wrongCount}개</span>)<br><br>
+        준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
+        대/충 ㅋ 퐈이팅! ㅎ
+    `;
+}
+
+// 초기화 실행
 loadQuestion();
 </script>
 </body>

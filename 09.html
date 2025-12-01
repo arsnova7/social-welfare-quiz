@@ -6,7 +6,6 @@
 <title>대/충 학우들을 위한 사회복지학적 상상력 [9강]</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
-    /* ① CSS 변수 최적화 및 정리 */
     :root { 
         --primary: #5c6ac4; 
         --success-bg: #e6fffa; 
@@ -27,8 +26,7 @@
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
     
-    /* ③ 버튼 스타일 개선 (disabled 상태 추가) */
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; font-family: inherit; }
     .nav-btn:hover:not(:disabled) { background: #f7fafc; }
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #eee; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -40,11 +38,28 @@
     .options { display: flex; flex-direction: column; gap: 10px; }
     .options.locked { pointer-events: none; opacity: 0.9; }
     
-    .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
+    .option-btn { 
+        text-align: left; 
+        padding: 15px; 
+        background: white; 
+        border: 2px solid #e2e8f0; 
+        border-radius: 10px; 
+        font-size: 1rem; 
+        color: #4a5568; 
+        cursor: pointer; 
+        transition: 0.2s; 
+        width: 100%; 
+        font-family: inherit; 
+    }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
+    .option-btn:active { background-color: #e0e7ff; transform: scale(0.98); }
+    
+    /* 정답/오답 스타일 개선 */
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
-    .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
+    .option-btn.user-selected-wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; font-weight: bold; }
+    .option-btn.wrong { opacity: 0.7; } /* 힌트 공개 시 시스템 오답 처리 */
 
+    /* 접근성 강화: 스크린리더가 읽을 수 있도록 설정 */
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
     .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: var(--success-text); }
     .exp-text { font-size: 0.95rem; line-height: 1.5; }
@@ -57,8 +72,12 @@
     .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
     .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
     .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    
+    .score-highlight { color: #2c7a7b; font-weight: 900; font-size: 1.3rem; }
+    .score-wrong { color: #e53e3e; font-weight: 900; }
+
     .btn-group { display: flex; flex-direction: column; gap: 10px; }
-    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; font-family: inherit; }
     .btn-retry { background-color: var(--primary); color: white; }
     .btn-home { background-color: #edf2f7; color: #2d3748; }
 
@@ -68,28 +87,28 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="index.html" class="home-btn">🏠</a>
+        <a href="index.html" class="home-btn" aria-label="홈으로 이동">🏠</a>
         <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제9강</h1>
         <div class="sub-title">틀려도 괜찮아요! 힌트가 나옵니다.</div>
     </div>
 
     <div id="quiz-screen">
         <div class="control-panel">
-            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()">이전</button>
-            <div class="status-badge" id="progress-text">1 / 25</div>
-            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()" aria-label="이전 문제">이전</button>
+            <div class="status-badge" id="progress-text" aria-live="polite">1 / 25</div>
+            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()" aria-label="다음 문제">다음</button>
         </div>
         <div class="quiz-card">
             <div class="q-badge">Q<span id="q-num">1</span></div>
             <div class="question-text" id="question">로딩 중...</div>
             <div class="options" id="options-container"></div>
             
-            <div class="hint-box" id="hint-box">
+            <div class="hint-box" id="hint-box" role="alert" aria-live="polite">
                 <span class="hint-title">💡 힌트</span>
                 <div class="hint-text" id="hint-text"></div>
             </div>
 
-            <div class="explanation-box" id="explanation-box">
+            <div class="explanation-box" id="explanation-box" role="alert" aria-live="polite">
                 <span class="exp-title">✅ 정답 및 해설</span>
                 <div class="exp-text" id="explanation-text"></div>
             </div>
@@ -99,20 +118,18 @@
     <div id="result-screen" class="result-card">
         <span class="result-emoji">🍗</span>
         <h2 class="result-title">수고하셨습니다!</h2>
-        <p class="result-desc">
-            9강 문제를 모두 풀으셨습니다.<br>
-            준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
-            대/충 ㅋ 퐈이팅! ㅎ
+        <p class="result-desc" id="score-result-text">
+            결과를 계산 중입니다...
         </p>
         <div class="btn-group">
-            <button class="result-btn btn-retry" onclick="location.reload()">🔄 처음부터 다시 풀기</button>
-            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 다른 강의 풀러 가기</button>
+            <button type="button" class="result-btn btn-retry" onclick="location.reload()">🔄 9강 다시 풀기</button>
+            <button type="button" class="result-btn btn-home" onclick="location.href='index.html'">🏠 전체 목록으로</button>
         </div>
     </div>
 </div>
 
 <script>
-// 9강 데이터
+// 9강 데이터 (총 25문제)
 const quizData = [
     {q:"사회적 행위(社會的 行爲)의 정의에 대한 설명으로 가장 적절한 것은?", o:["오직 개인의 내면적 심리 상태에 의해서만 결정되는 동작", "타인에게 영향을 미치거나 사회적 의미를 내포하고 있는 동작", "결과에 관계없이 오직 의도한 행위만 포함하는 개념", "사회 구조와는 무관하게 발생하는 일회성 움직임"], a:1, h:"인간의 행위는 사회 구조 속에서 타인과 분리될 수 없습니다.", e:"사회적 행위란 개인이 사회 구조 속에서 살아가며 타인에게 직간접적으로 영향을 미치거나 사회적 의미를 내포하고 있는 동작을 의미한다. 의도적이든 비의도적이든 서로에게 영향을 준다."},
     {q:"막스 베버(Max Weber)가 제시한 사회적 행위 유형 중, 특정 목표를 달성하기 위해 수단과 방법을 합리적으로 계산하는 행위는 무엇인가?", o:["감정적 행위", "가치 합리적 행위", "전통적 행위", "목적 합리적 행위"], a:3, h:"목표 달성을 위한 계산과 도구적 합리성을 생각해야 합니다.", e:"목적 합리적 행위는 명확한 목표를 설정하고, 그 목표를 달성하기 위한 수단을 합리적으로 계산해서 행하는 행위이다. 가치 합리적 행위는 종교나 신념 등 가치를 실현하기 위한 행위이며, 감정적 행위는 순간의 정서에 따르는 행위이다."},
@@ -133,7 +150,7 @@ const quizData = [
     {q:"사회 조직이 사회 집단과 비교했을 때 갖는 특징으로 옳지 않은 것은?", o:["규모가 더 크고 분명한 실리적 목적을 갖는다.", "명확한 목적과 체계적으로 구조화된 구성원 간 짜임새를 강조한다.", "소속감, 상호작용 등 심리적인 요소에 중점을 둔다.", "엄격한 조직 체계를 갖춘 집단이다."], a:2, h:"사회 조직은 심리적 관계보다는 구조적 틀과 목적에 집중합니다.", e:"사회 조직은 사회 집단에 비해 규모가 크며, 분명하고 실리적인 목적과 엄격한 조직 체계를 갖춘 집단이다. 조직은 명확한 목적과 구성원 간의 짜임새를 강조하며, 소속감, 상호작용, 정체성 등 심리적인 요소는 사회 집단에서 강조되는 특징이다."},
     {q:"사회 조직이 규모가 커지면서 약화될 수 있는 소속감이나 상호작용의 문제를 해결하기 위해 활용하는 수단으로 보기 어려운 것은?", o:["분명한 지위와 역할 체계 확립", "엄격한 규칙과 규범의 적용", "실리적 목표와 비전의 제시", "비공식 조직의 공식 조직화"], a:3, h:"사회 조직이 구성원의 이탈을 막고 효율을 유지하기 위해 사용하는 통제 수단들을 생각해 보세요.", e:"사회 조직은 규모가 커질수록 소속감이 약해지는 문제를 해결하기 위해 실리적인 목표, 분명한 지위와 역할 체계, 엄격한 규칙과 규범 등을 활용한다. 비공식 조직은 공식 조직 내부에 자발적으로 형성된 친밀한 관계 집단이므로, 이를 공식 조직화하는 것은 조직의 효율 증대 수단으로 언급되지 않았다."},
     {q:"기업이나 직장과 같이 가입과 탈퇴가 자유롭긴 하지만 실리적 필요에 따라 가입하며, 보상 배분(성과 중심 동기 부여)에 의해 통제되는 에치오니(A. Etzioni)의 공식 조직 유형은 무엇인가?", o:["강제적 조직", "규범적 조직", "공리적 조직", "비공식 조직"], a:2, h:"이익을 극대화하기 위해 이해타산적으로 순응하는 조직입니다.", e:"공리적 조직은 실리적 필요에 따라 가입하며, 보수/보상 배분(성과 중심 동기 부여)에 의한 통제가 이루어진다. 구성원은 자신의 이익을 극대화하기 위해 이해타산적으로 조직의 규칙에 순응한다."},
-    {q:"에치오니의 공식 조직 유형 중, 군대나 교정 시설과 같이 강제적인 힘에 의해 가입과 탈퇴가 강요되며, 강제적인 규율과 통제로 구성원을 관리하는 조직은 무엇인가?", o:["강제적 조직", "공리적 조직", "자발적 조직", "비공식 조직"], a:0, h:"구성원이 '어쩔 수 없으니까 따른다'고 생각하는 유형입니다.", e:"강제적 조직은 가입과 탈퇴가 자유롭지 못하고 강제적 힘에 의해 강요되는 조직이다 (예: 군대, 교정 시설). 이 조직은 강제적 규율과 감시를 통해 행동을 관리하며, 구성원은 비자발적으로 순응한다."},
+    {q:"에치오니의 공식 조직 유형 중, 물리적인 억압이나 통제 수단을 통해 구성원을 관리하며, 가입과 탈퇴가 본인의 의사와 상관없이 이루어지는 조직은?", o:["강제적 조직", "공리적 조직", "자발적 조직", "비공식 조직"], a:0, h:"구성원이 '어쩔 수 없으니까 따른다'고 생각하는 유형입니다.", e:"강제적 조직은 가입과 탈퇴가 자유롭지 못하고 강제적 힘에 의해 강요되는 조직이다 (예: 군대, 교정 시설). 이 조직은 강제적 규율과 감시를 통해 행동을 관리하며, 구성원은 비자발적으로 순응한다."},
     {q:"시민 단체, 종교 조직과 같이 가치, 신념, 사명감 등에 따라 자유롭게 가입하며, 도덕적 권위에 의한 통제와 규범적 의지에 의한 순응이 특징인 공식 조직 유형은?", o:["강제적 조직", "공리적 조직", "비공식 조직", "자발적/규범적 조직"], a:3, h:"물질적 보상보다는 도덕적 만족감을 추구하는 조직입니다.", e:"자발적/규범적 조직은 가치, 신념, 사명감에 따라 자유롭게 가입하며, 물질적 보상 대신 도덕적 만족감, 사회적 인정 등을 보상으로 얻는다. 통제는 도덕적 권위에 의해 이루어지며, 순응은 자발적이고 규범적인 의지에 따른다."},
     {q:"사회복지 현장에서 '유사 혹은 동일한 해석 체계(의미의 코드)'를 공유하는 것이 중요하다고 볼 때, 사회복지사와 클라이언트가 지향해야 할 바람직한 관계 설정은 무엇인가?", o:["복지사-수혜자 관계", "시민-시민 관계", "통제자-피통제자 관계", "공급자-소비자 관계"], a:1, h:"단순히 도움을 주고받는 관계를 넘어 사회 구조의 문제를 함께 보는 시각입니다.", e:"복지사와 클라이언트가 동일한 해석 체계를 공유할 때, 단순히 도움을 제공하고 받는 수혜자의 관계가 아닌, 우리 사회가 제대로 작동되고 있는지를 고민하는 '시민 대 시민'으로서의 관점으로 대화하고 만날 수 있으며, 이는 사회 관리적 차원의 확장된 해석을 가능하게 한다."},
     {q:"2차 집단으로 출발했지만 1차 집단의 성격을 갖게 되는 집단 유형의 대표적인 예시는 무엇인가?", o:["군대", "회사 내 사모임이나 동문회", "일시적으로 모인 길거리 군중", "정부 조직"], a:1, h:"직장이나 학교 내에서 형성되는 친밀하고 정서적인 소모임을 떠올려 보세요.", e:"2차 집단(회사, 학교 등)은 실리적인 목적으로 맺어지지만, 그 안에서 친밀하고 정서적인 관계를 바탕으로 사모임이나 동문회가 형성되는 경우가 있는데, 이를 2차 집단으로 출발했지만 1차 집단의 성격을 갖게 되는 경우라고 설명한다."},
@@ -143,6 +160,8 @@ const quizData = [
 
 let curIdx = 0;
 let attempts = 0;
+// 점수 및 상태 관리 (null: 미응시, true: 정답 점수획득, false: 오답 점수실패)
+let userResults = new Array(quizData.length).fill(null);
 
 const qEl = document.getElementById('question');
 const optContainer = document.getElementById('options-container');
@@ -154,10 +173,13 @@ const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
 const quizScreen = document.getElementById('quiz-screen');
 const resultScreen = document.getElementById('result-screen');
+const scoreResultText = document.getElementById('score-result-text');
 
 function loadQuestion() {
     const d = quizData[curIdx];
     attempts = 0; 
+    
+    // UI 초기화
     qNum.innerText = curIdx + 1;
     progText.innerText = `${curIdx + 1} / ${quizData.length}`;
     qEl.innerText = d.q;
@@ -166,40 +188,84 @@ function loadQuestion() {
     expBox.style.display = 'none';
     hintBox.style.display = 'none';
     
-    // ④ 오타 수정 & ③ 접근성 개선 (첫 문제일 때 이전 버튼 비활성화)
     const prevBtn = document.getElementById('prev-btn');
     if (prevBtn) prevBtn.disabled = curIdx === 0;
 
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = (curIdx === quizData.length - 1) ? "결과 보기" : "다음";
+    nextBtn.classList.remove('active');
+    
+    // 이미 푼 문제(점수가 결정된 상태) 확인 및 UI 복원
+    const isSolved = userResults[curIdx] !== null;
+
     d.o.forEach((opt, i) => {
-        const btn = document.createElement('div');
-        btn.classList.add('option-btn');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn';
         btn.innerText = opt;
         btn.onclick = () => checkAnswer(i, btn);
+        
+        // 이미 푼 문제라면 정답 표시 및 잠금
+        if (isSolved) {
+            optContainer.classList.add('locked');
+            if (i === d.a) {
+                btn.classList.add('correct');
+            }
+            btn.setAttribute('aria-disabled', 'true');
+        }
         optContainer.appendChild(btn);
     });
+
+    // 이미 푼 문제라면 해설 바로 보여주기
+    if (isSolved) {
+        expText.innerText = d.e;
+        expBox.style.display = 'block';
+        nextBtn.classList.add('active'); 
+    }
 }
 
-// ⑤ 중복 코드 최적화 (정답 표시 로직 분리)
 function showCorrectAnswer(answerIdx, explanation) {
     const allBtns = document.querySelectorAll('.option-btn');
     allBtns[answerIdx].classList.add('correct');
+    
+    // 모든 버튼 비활성화 처리 (접근성)
+    allBtns.forEach(btn => btn.setAttribute('aria-disabled', 'true'));
+    
     optContainer.classList.add('locked');
     hintBox.style.display = 'none';
     expText.innerText = explanation;
     expBox.style.display = 'block';
+    
+    document.getElementById('next-btn').classList.add('active');
 }
 
 function checkAnswer(sel, btn) {
     const d = quizData[curIdx];
-    if (optContainer.classList.contains('locked') || btn.classList.contains('wrong')) return;
+    if (!d) return; 
+
+    // 잠금 상태이거나 이미 클릭한 오답 버튼은 무시
+    if (optContainer.classList.contains('locked') || btn.classList.contains('user-selected-wrong')) return;
 
     if (sel === d.a) {
+        // 정답 로직
         btn.classList.add('correct');
+        
+        // 아직 점수 판정이 안 난 상태라면 정답 처리
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = true;
+        }
+
         showCorrectAnswer(d.a, d.e);
     } else {
+        // 오답 로직
         attempts++;
-        btn.classList.add('wrong');
+        btn.classList.add('user-selected-wrong'); // CSS 클래스 연결
         
+        // 첫 시도에 틀렸다면 점수 획득 실패 처리
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = false; 
+        }
+
         if (attempts >= 2) {
             showCorrectAnswer(d.a, d.e);
         } else {
@@ -214,8 +280,7 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        quizScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+        showResult();
     }
 }
 
@@ -226,6 +291,23 @@ function prevQuestion() {
     }
 }
 
+function showResult() {
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    
+    // 점수 계산: userResults 배열에서 true인 것만 카운트
+    const finalScore = userResults.filter(r => r === true).length;
+    const wrongCount = quizData.length - finalScore;
+
+    scoreResultText.innerHTML = `
+        총 ${quizData.length}문제 중 <span class="score-highlight">${finalScore}문제</span>를 맞추셨습니다!<br>
+        (틀린 문제: <span class="score-wrong">${wrongCount}개</span>)<br><br>
+        준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
+        대/충 ㅋ 퐈이팅! ㅎ
+    `;
+}
+
+// 초기화 실행
 loadQuestion();
 </script>
 </body>

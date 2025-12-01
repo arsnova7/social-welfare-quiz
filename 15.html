@@ -26,7 +26,7 @@
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
     
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; font-family: inherit; }
     .nav-btn:hover:not(:disabled) { background: #f7fafc; }
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #eee; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -38,10 +38,25 @@
     .options { display: flex; flex-direction: column; gap: 10px; }
     .options.locked { pointer-events: none; opacity: 0.9; }
     
-    .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
+    .option-btn { 
+        text-align: left; 
+        padding: 15px; 
+        background: white; 
+        border: 2px solid #e2e8f0; 
+        border-radius: 10px; 
+        font-size: 1rem; 
+        color: #4a5568; 
+        cursor: pointer; 
+        transition: 0.2s; 
+        width: 100%; 
+        font-family: inherit; 
+    }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
+    .option-btn:active { background-color: #e0e7ff; transform: scale(0.98); }
+    
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
-    .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
+    .option-btn.user-selected-wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; font-weight: bold; }
+    .option-btn.wrong { opacity: 0.7; } 
 
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
     .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: var(--success-text); }
@@ -55,8 +70,12 @@
     .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
     .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
     .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    
+    .score-highlight { color: #2c7a7b; font-weight: 900; font-size: 1.3rem; }
+    .score-wrong { color: #e53e3e; font-weight: 900; }
+
     .btn-group { display: flex; flex-direction: column; gap: 10px; }
-    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; font-family: inherit; }
     .btn-retry { background-color: var(--primary); color: white; }
     .btn-home { background-color: #edf2f7; color: #2d3748; }
 
@@ -66,28 +85,28 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="index.html" class="home-btn">🏠</a>
+        <a href="index.html" class="home-btn" aria-label="홈으로 이동">🏠</a>
         <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제15강</h1>
         <div class="sub-title">틀려도 괜찮아요! 힌트가 나옵니다.</div>
     </div>
 
     <div id="quiz-screen">
         <div class="control-panel">
-            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()">이전</button>
+            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()" aria-label="이전 문제">이전</button>
             <div class="status-badge" id="progress-text">1 / 25</div>
-            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()" aria-label="다음 문제">다음</button>
         </div>
         <div class="quiz-card">
             <div class="q-badge">Q<span id="q-num">1</span></div>
             <div class="question-text" id="question">로딩 중...</div>
             <div class="options" id="options-container"></div>
             
-            <div class="hint-box" id="hint-box">
+            <div class="hint-box" id="hint-box" role="alert" aria-live="polite">
                 <span class="hint-title">💡 힌트</span>
                 <div class="hint-text" id="hint-text"></div>
             </div>
 
-            <div class="explanation-box" id="explanation-box">
+            <div class="explanation-box" id="explanation-box" role="alert" aria-live="polite">
                 <span class="exp-title">✅ 정답 및 해설</span>
                 <div class="exp-text" id="explanation-text"></div>
             </div>
@@ -97,28 +116,27 @@
     <div id="result-screen" class="result-card">
         <span class="result-emoji">🍗</span>
         <h2 class="result-title">완주를 축하합니다!</h2>
-        <p class="result-desc">
-            마지막 15강까지 모두 해내셨습니다.<br>
-            이 열정이라면 <strong>치킨 장학금</strong>은 따놓은 당상!<br>
-            대/충 ㅋ 퐈이팅! ㅎ
+        <p class="result-desc" id="score-result-text">
+            결과를 계산 중입니다...
         </p>
         <div class="btn-group">
-            <button class="result-btn btn-retry" onclick="location.reload()">🔄 15강 다시 풀기</button>
-            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 전체 목록으로</button>
+            <button type="button" class="result-btn btn-retry" onclick="location.reload()">🔄 15강 다시 풀기</button>
+            <button type="button" class="result-btn btn-home" onclick="location.href='index.html'">🏠 전체 목록으로</button>
         </div>
     </div>
 </div>
 
 <script>
-// 15강 데이터 (대망의 완결편!)
+// 15강 데이터 (7번 문제 보기 수정됨)
 const quizData = [
     {q:"사회복지학적 상상력에 대한 설명 중, 강의에서 강조된 '내공'과 가장 유사한 특성을 갖는 것은 무엇인가요?", o:["일시적인 오락적 만족감을 추구하는 현실 도피적인 능력", "근거가 없지만 논리에 의해 정정되지 않는 주관적인 신념", "구조와 행위 간의 관계를 통해 사회 문제를 발견하는 지적 능력", "하늘에서 뚝 떨어지듯 갑작스럽게 발생하는 혁신적인 아이디어"], a:2, h:"사회 문제의 배경과 맥락을 파악하고 비판적으로 이해하는 사고의 방식입니다.", e:"사회복지학적 상상력은 단순한 공상이나 망상이 아닌, 거대한 구조와 그 안의 행위 간의 관계를 통해 현실의 사회 문제를 발견해 낼 수 있는 비판적이고 분석적인 지적인 능력입니다. 1번은 공상, 2번은 망상에 대한 설명이며, 4번은 사회 현상이 갑자기 생기는 일은 없다(배경과 맥락이 있다)는 설명과 상반됩니다."},
     {q:"사회복지학적 상상력을 훈련하는 구체적인 방법 중, 사회 현상의 시간적 흐름과 배경을 탐색하는 방식은 무엇인가요?", o:["비교사회적 상상력", "비판적 상상력", "역사적 상상력", "인류학적 상상력"], a:2, h:"'예전에는 어땠을까?'라는 질문을 던지며 흐름을 추적하는 방법입니다.", e:"사회 현상이 갑자기 발생하는 것이 아니라 배경과 맥락, 흐름이 있기 때문에, 예전에는 어땠는지를 추적해 가는 방법이 바로 역사적 상상력입니다. 비교사회적 상상력은 다른 나라/지역과의 비교를 통해 우리 사회 구조를 파악하는 것이고, 비판적 상상력은 고정 불변의 진리인지 질문하는 것입니다."},
     {q:"사회복지학적 상상력이 왜 필요한가에 대한 강의 내용 중, 신자유주의 사회의 특징과 가장 밀접하게 연결되는 이유는 무엇인가요?", o:["현실적인 복지 서비스 제공에 집중하기 위함이다.", "복지 수혜자가 자신의 권리를 자각하도록 돕기 위함이다.", "경쟁과 효율을 중시하여 사회적 비용을 개인에게 전가하는 경향에 맞서기 위함이다.", "고정 불변의 진리를 찾아내어 사회적 합의를 이루기 위함이다."], a:2, h:"자본주의 사회에서 이윤 창출을 위해 조직(구조)이 줄이려 하는 것은 무엇인가요?", e:"신자유주의 사회는 경쟁과 효율을 중시하며 비용을 줄이는 것이 중요해지는데, 이 때문에 구조나 사회가 책임져야 할 문제의 원인이나 해결책을 개인에게 돌려 비용 부담을 줄이려는 경향이 있습니다. 사회복지학적 상상력은 이러한 사회 문제를 개인 문제로 만들어 버리는 경향에 대응하기 위해 필요합니다."},
     {q:"ATM기 이용 시 주의 사항 안내문을 비판적으로 상상했을 때 도출할 수 있는 주된 결론은 무엇인가요?", o:["고객의 편의를 위해 ATM기 이용 시 개인의 주의 의무를 강화해야 한다.", "ATM기는 은행이 아닌 이용자 개인의 자산이므로 개인 스스로 철저히 관리해야 한다.", "ATM기를 통한 사고는 개인의 부주의가 아닌, 관리 주체인 은행의 적극적인 관리 책임 소홀 문제로 볼 수 있다.", "ATM기는 은행 직원의 인건비와는 무관하며 단순 업무 처리에만 기여한다."], a:2, h:"기기의 소유 및 관리 책임은 누구에게 있는지 생각해 보세요.", e:"ATM기는 은행의 자산이며, 따라서 기기의 관리 책임 및 고객이 안전하게 사용하도록 할 의무는 은행(구조/조직)에 있습니다. 안내문은 개인의 주의를 강조하지만, 비판적 상상력은 이것이 은행이 책임을 개인에게 전가하고 비용을 절감하기 위한 시도로 해석될 수 있음을 보여줍니다."},
     {q:"강의에서 언급된 '사회적 상상'(사회복지학적 상상력의 본질)의 목적으로 적절하지 않은 것은 무엇인가요?", o:["비판적 목적", "분석적 목적", "현실 도피적 목적", "문제 해결적 목적"], a:2, h:"현실 도피적 목적은 사회적 상상이 아닌 다른 종류의 상상과 관련됩니다.", e:"사회적 상상은 현실의 사회 문제를 발견해 내는 지적인 능력으로, 비판적, 분석적, 해석적, 그리고 문제 해결적인 목적을 가집니다. 현실 도피적 목적은 공상의 주요 목적입니다."},
-    {q:"사회복지학적 상상력을 훈련하기 위한 기본적인 전제 조건 두 가지는 무엇인가요?", o:["공상 및 망상 적극 수용하기와 비판적 시각 버리기", "사회 현상에 관심을 갖기와 낯설게 바라보기", "고정 불변의 진리를 추구하기와 권리 의식 강화하기", "역사적 흐름 무시하기와 개인의 능력 강조하기"], a:1, h:"익숙한 것을 다르게 보고, 호기심을 유발하는 두 가지 태도를 떠올려 보세요.", e:"사회복지학적 상상력을 하기 위해 기본적으로 전제되어야 할 것은 사회 현상에 관심을 갖는 것과 익숙한 상황을 새로운 시각으로 보려는 낯설게 바라보는 연습을 의도적으로 하는 것입니다. 관심을 가져야 궁금증이나 질문이 생기고, 이를 통해 사회 조사를 할 수 있습니다."},
-    {q:"사회복지학적 상상력의 구체적인 방법론 중, 우리가 살고 있는 사회 구조가 익숙해 보일 때 그 특성이 더 잘 드러나도록 돕는 방식은 무엇인가요?", o:["역사적 상상력", "비판적 상상력", "인류학적 상상력", "비교사회적 상상력"], a:3, h:"다른 지역이나 국가를 예로 들어 설명했던 방법을 생각해 보세요.", e:"우리가 사는 사회 구조는 너무 익숙하기 때문에 다른 나라, 다른 지역, 다른 집단과 비교해 봄으로써 우리 구조의 문제가 더 눈에 잘 들어옵니다. 이것이 바로 비교사회적 상상력입니다."},
+    {q:"사회복지학적 상상력을 훈련하기 위한 기본적인 전제 조건 두 가지는 무엇인가요?", o:["공상 및 망상 적극 수용하기와 비판적 시각 버리기", "사회 현상에 관심을 갖기와 낯설게 바라보기", "고정 불변의 진리 추구하기와 권리 의식 강화하기", "역사적 흐름 무시하기와 개인의 능력 강조하기"], a:1, h:"익숙한 것을 다르게 보고, 호기심을 유발하는 두 가지 태도를 떠올려 보세요.", e:"사회복지학적 상상력을 하기 위해 기본적으로 전제되어야 할 것은 사회 현상에 관심을 갖는 것과 익숙한 상황을 새로운 시각으로 보려는 낯설게 바라보는 연습을 의도적으로 하는 것입니다. 관심을 가져야 궁금증이나 질문이 생기고, 이를 통해 사회 조사를 할 수 있습니다."},
+    // 7번 문제 보기 수정됨 (인류학적 상상력과 비교사회적 상상력이 중복되어 하나를 오답인 '공상'으로 대체)
+    {q:"사회복지학적 상상력의 구체적인 방법론 중, 우리가 살고 있는 사회 구조가 익숙해 보일 때 그 특성이 더 잘 드러나도록 돕는 방식은 무엇인가요?", o:["역사적 상상력", "비판적 상상력", "공상", "비교사회적 상상력"], a:3, h:"다른 지역이나 국가를 예로 들어 설명했던 방법을 생각해 보세요.", e:"우리가 사는 사회 구조는 너무 익숙하기 때문에 다른 나라, 다른 지역, 다른 집단과 비교해 봄으로써 우리 구조의 문제가 더 눈에 잘 들어옵니다. 이것이 바로 비교사회적 상상력(인류학적 상상력)입니다."},
     {q:"다음 중 망상(妄想)의 특징으로 가장 적절한 것은 무엇인가요?", o:["현실적이지 못하거나 실현될 가망이 없는 것을 막연히 그려보는 생각이다.", "사실의 경험이나 논리에 의해 쉽게 정정되는 주관적인 믿음이다.", "비판적, 분석적, 해석적, 문제 해결적 목적을 가진 지적 능력이다.", "현실과 단절된 상태이며, 현실 인식이 왜곡되어 근거 없는 신념을 고수하는 것이다."], a:3, h:"망상은 개인의 신념이 현실이나 논리에 의해 교정되지 않는 상태를 의미합니다.", e:"망상은 근거가 없는 주관적인 신념으로, 사실의 경험이나 논리에 의하여 정정되지 아니하며, 현실과 단절되고 현실 인식이 왜곡되어 있는 상태를 말합니다. 1번은 공상, 3번은 사회적 상상입니다."},
     {q:"사회복지학적 상상력이 궁극적으로 함양하고자 하는 가장 큰 차원에서의 상상력은 무엇인가요?", o:["비교사회적 상상력", "공상", "비판적 상상력", "역사적 상상력"], a:2, h:"사회복지학적 상상력의 최종 목표 중 하나는 감춰진 사회 문제를 발견해내는 능력입니다.", e:"사회복지학적 상상력은 총체적으로 세상을 비판적이고 분석적으로 이해하는 능력이며, 감춰진 사회 문제를 발견해 낼 수 있는 비판적 상상력을 함양하는 것을 최종 목표로 할 수 있습니다. 역사적, 비교사회적 상상력은 이를 위한 구체적인 방법들이 됩니다."},
     {q:"사회 현상에서 '고정 불변의 진리인가?'라는 질문을 던져야 하는 이유는 무엇인가요?", o:["사회는 신이 창조한 것이므로 진리가 반드시 존재하기 때문이다.", "사회는 인간들이 어떤 목적과 필요에 의해 만들어진 것이기 때문이다.", "사회적 상상력의 훈련에는 종교적 영역이 필수적이기 때문이다.", "사회계약설을 부정하고 개인의 자유만을 강조하기 위해서이다."], a:1, h:"사회가 어떻게 탄생하고 형성되었는지를 규정하는 근본 원리를 떠올려 보세요.", e:"사회 현상 중 고정 불변의 진리라는 것은 거의 없는데, 그 이유는 사회가 인간들이 어떤 목적과 필요에 의해서 만들어진 것이기 때문입니다 (사회계약설 언급). 따라서 어떻게 만들어지고 합의하느냐에 따라 다양하게 구성될 수 있으므로, 우리가 보고 있는 것이 절대적인 진리인지 질문해야 합니다."},
@@ -141,6 +159,7 @@ const quizData = [
 
 let curIdx = 0;
 let attempts = 0;
+let userResults = new Array(quizData.length).fill(null);
 
 const qEl = document.getElementById('question');
 const optContainer = document.getElementById('options-container');
@@ -152,10 +171,12 @@ const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
 const quizScreen = document.getElementById('quiz-screen');
 const resultScreen = document.getElementById('result-screen');
+const scoreResultText = document.getElementById('score-result-text');
 
 function loadQuestion() {
     const d = quizData[curIdx];
     attempts = 0; 
+    
     qNum.innerText = curIdx + 1;
     progText.innerText = `${curIdx + 1} / ${quizData.length}`;
     qEl.innerText = d.q;
@@ -164,40 +185,85 @@ function loadQuestion() {
     expBox.style.display = 'none';
     hintBox.style.display = 'none';
     
-    // ③ 접근성 개선
     const prevBtn = document.getElementById('prev-btn');
     if (prevBtn) prevBtn.disabled = curIdx === 0;
 
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = (curIdx === quizData.length - 1) ? "결과 보기" : "다음";
+    
+    // 핵심 로직: 이미 풀었거나 마지막 문제면 파란불(active) 
+    if (userResults[curIdx] !== null || curIdx === quizData.length - 1) {
+        nextBtn.classList.add('active');
+    } else {
+        nextBtn.classList.remove('active');
+    }
+
+    const isSolved = userResults[curIdx] !== null;
+
     d.o.forEach((opt, i) => {
-        const btn = document.createElement('div');
-        btn.classList.add('option-btn');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn';
         btn.innerText = opt;
         btn.onclick = () => checkAnswer(i, btn);
+        
+        if (isSolved) {
+            optContainer.classList.add('locked');
+            if (i === d.a) {
+                btn.classList.add('correct');
+            }
+            btn.setAttribute('aria-disabled', 'true');
+            btn.disabled = true;
+        }
         optContainer.appendChild(btn);
     });
+
+    if (isSolved) {
+        expText.innerText = d.e;
+        expBox.style.display = 'block';
+    }
 }
 
-// ⑤ 중복 코드 최적화
 function showCorrectAnswer(answerIdx, explanation) {
     const allBtns = document.querySelectorAll('.option-btn');
     allBtns[answerIdx].classList.add('correct');
+    
+    allBtns.forEach(btn => {
+        btn.setAttribute('aria-disabled', 'true');
+        btn.disabled = true;
+    });
+    
     optContainer.classList.add('locked');
     hintBox.style.display = 'none';
     expText.innerText = explanation;
     expBox.style.display = 'block';
+    
+    document.getElementById('next-btn').classList.add('active');
 }
 
 function checkAnswer(sel, btn) {
     const d = quizData[curIdx];
-    if (optContainer.classList.contains('locked') || btn.classList.contains('wrong')) return;
+    if (!d) return; 
+
+    if (optContainer.classList.contains('locked') || btn.classList.contains('user-selected-wrong')) return;
 
     if (sel === d.a) {
         btn.classList.add('correct');
+        
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = true;
+        }
+
         showCorrectAnswer(d.a, d.e);
     } else {
         attempts++;
-        btn.classList.add('wrong');
+        btn.classList.add('user-selected-wrong');
         
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = false; 
+        }
+
+        // 오답 2번 시 정답 공개
         if (attempts >= 2) {
             showCorrectAnswer(d.a, d.e);
         } else {
@@ -212,8 +278,7 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        quizScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+        showResult();
     }
 }
 
@@ -222,6 +287,21 @@ function prevQuestion() {
         curIdx--;
         loadQuestion();
     }
+}
+
+function showResult() {
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    
+    const finalScore = userResults.filter(r => r === true).length;
+    const wrongCount = quizData.length - finalScore;
+
+    scoreResultText.innerHTML = `
+        총 ${quizData.length}문제 중 <span class="score-highlight">${finalScore}문제</span>를 맞추셨습니다!<br>
+        (틀린 문제: <span class="score-wrong">${wrongCount}개</span>)<br><br>
+        준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
+        대/충 ㅋ 퐈이팅! ㅎ
+    `;
 }
 
 loadQuestion();

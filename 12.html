@@ -26,7 +26,7 @@
     .control-panel { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .status-badge { font-weight: bold; color: #555; }
     
-    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; }
+    .nav-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #4a5568; transition: 0.2s; font-family: inherit; }
     .nav-btn:hover:not(:disabled) { background: #f7fafc; }
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #eee; }
     .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -38,11 +38,30 @@
     .options { display: flex; flex-direction: column; gap: 10px; }
     .options.locked { pointer-events: none; opacity: 0.9; }
     
-    .option-btn { text-align: left; padding: 15px; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; color: #4a5568; cursor: pointer; transition: 0.2s; }
+    .option-btn { 
+        text-align: left; 
+        padding: 15px; 
+        background: white; 
+        border: 2px solid #e2e8f0; 
+        border-radius: 10px; 
+        font-size: 1rem; 
+        color: #4a5568; 
+        cursor: pointer; 
+        transition: 0.2s; 
+        width: 100%; 
+        font-family: inherit; 
+    }
     .option-btn:hover { border-color: var(--primary); background: #f0f4ff; }
+    .option-btn:active { background-color: #e0e7ff; transform: scale(0.98); }
+    
+    /* 정답 스타일 */
     .option-btn.correct { border-color: #38a169; background-color: #f0fff4; color: #276749; font-weight: bold; }
-    .option-btn.wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; opacity: 0.7; pointer-events: none; }
+    /* 사용자가 선택한 오답 스타일 (수정 반영) */
+    .option-btn.user-selected-wrong { border-color: #e53e3e; background-color: #fff5f5; color: #c53030; font-weight: bold; }
+    /* 시스템상 오답 처리 (힌트 보기 후) */
+    .option-btn.wrong { opacity: 0.7; }
 
+    /* 접근성: 스크린리더가 동적 변화를 읽도록 설정 */
     .explanation-box { margin-top: 20px; background: var(--success-bg); border: 1px solid #b2f5ea; border-radius: 10px; padding: 15px; display: none; }
     .exp-title { font-weight: 800; margin-bottom: 8px; display: block; color: var(--success-text); }
     .exp-text { font-size: 0.95rem; line-height: 1.5; }
@@ -55,8 +74,12 @@
     .result-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
     .result-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; color: #1a202c; }
     .result-desc { color: #718096; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+    
+    .score-highlight { color: #2c7a7b; font-weight: 900; font-size: 1.3rem; }
+    .score-wrong { color: #e53e3e; font-weight: 900; }
+
     .btn-group { display: flex; flex-direction: column; gap: 10px; }
-    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+    .result-btn { padding: 15px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: none; width: 100%; transition: 0.2s; font-family: inherit; }
     .btn-retry { background-color: var(--primary); color: white; }
     .btn-home { background-color: #edf2f7; color: #2d3748; }
 
@@ -66,28 +89,28 @@
 <body>
 <div class="container">
     <div class="header">
-        <a href="index.html" class="home-btn">🏠</a>
+        <a href="index.html" class="home-btn" aria-label="홈으로 이동">🏠</a>
         <h1 class="main-title">대전/충남지역 25학번<br>사회복지학적 상상력 제12강</h1>
         <div class="sub-title">틀려도 괜찮아요! 힌트가 나옵니다.</div>
     </div>
 
     <div id="quiz-screen">
         <div class="control-panel">
-            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()">이전</button>
-            <div class="status-badge" id="progress-text">1 / 25</div>
-            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()">다음</button>
+            <button type="button" class="nav-btn" id="prev-btn" onclick="prevQuestion()" aria-label="이전 문제">이전</button>
+            <div class="status-badge" id="progress-text" aria-live="polite">1 / 25</div>
+            <button type="button" class="nav-btn active" id="next-btn" onclick="nextQuestion()" aria-label="다음 문제">다음</button>
         </div>
         <div class="quiz-card">
             <div class="q-badge">Q<span id="q-num">1</span></div>
             <div class="question-text" id="question">로딩 중...</div>
             <div class="options" id="options-container"></div>
             
-            <div class="hint-box" id="hint-box">
+            <div class="hint-box" id="hint-box" role="alert" aria-live="polite">
                 <span class="hint-title">💡 힌트</span>
                 <div class="hint-text" id="hint-text"></div>
             </div>
 
-            <div class="explanation-box" id="explanation-box">
+            <div class="explanation-box" id="explanation-box" role="alert" aria-live="polite">
                 <span class="exp-title">✅ 정답 및 해설</span>
                 <div class="exp-text" id="explanation-text"></div>
             </div>
@@ -97,20 +120,18 @@
     <div id="result-screen" class="result-card">
         <span class="result-emoji">🍗</span>
         <h2 class="result-title">수고하셨습니다!</h2>
-        <p class="result-desc">
-            12강 문제를 모두 풀으셨습니다.<br>
-            준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
-            대/충 ㅋ 퐈이팅! ㅎ
+        <p class="result-desc" id="score-result-text">
+            결과를 계산 중입니다...
         </p>
         <div class="btn-group">
-            <button class="result-btn btn-retry" onclick="location.reload()">🔄 처음부터 다시 풀기</button>
-            <button class="result-btn btn-home" onclick="location.href='index.html'">🏠 다른 강의 풀러 가기</button>
+            <button type="button" class="result-btn btn-retry" onclick="location.reload()">🔄 12강 다시 풀기</button>
+            <button type="button" class="result-btn btn-home" onclick="location.href='index.html'">🏠 전체 목록으로</button>
         </div>
     </div>
 </div>
 
 <script>
-// 12강 데이터
+// 12강 데이터 (텍스트 및 정답 검증 완료)
 const quizData = [
     {q:"미디어(Media)의 가장 기본적인 정의와 개념에 대한 설명으로 옳은 것은?", o:["콘텐츠(Content)를 담는 그릇만을 의미한다.", "보내는 자와 받는 자 사이의 이윤 창출을 위한 경제적 매개물이다.", "대중에게 일방적으로 정보를 전달하는 전통적인 매체만을 지칭한다.", "보내는 자와 받는 자 사이의 의사소통을 가능하게 하는 매개물(중간 매개)이다."], a:3, h:"미디어 단어 자체가 의미하는 중간적인 역할을 생각해보세요.", e:"미디어는 '중간 매개'라는 의미를 갖고 있으며, 보내는 자와 받는 자 사이에서 의사소통을 가능하게 하는 매개물입니다. 미디어는 이 그릇(매개물)과 그 안에 담긴 내용(콘텐츠)을 합쳐서 표현하기도 하고, 그릇만을 의미하기도 합니다."},
     {q:"전통적인 미디어(대중 매체)가 가지고 있는 주요 특성이 아닌 것은?", o:["일방향성", "대량 전달", "송신자 중심", "쌍방향성 및 참여성"], a:3, h:"라디오나 TV의 정보 흐름이 어떤 방향이었는지 떠올려보세요.", e:"전통적인 미디어(인쇄물, 라디오, TV)는 누군가가 만든 것을 일방적으로 전달하며, 대량 전달과 송신자(보내는 사람) 중심이라는 특징을 가집니다. 쌍방향성, 참여성, 분산된 형태는 SNS, 유튜브, 블로그와 같은 디지털 미디어(뉴 미디어)의 특징입니다."},
@@ -122,8 +143,8 @@ const quizData = [
     {q:"21세기에 접어들어 정보 통신 기술(ICT)의 발달이 미디어에 가져온 주요 변화의 세 가지 특징을 바르게 연결한 것은?", o:["복잡화, 아날로그화, 폐쇄적 연결", "소형화, 디지털화, 네트워크화", "대형화, 일방향화, 집중화", "고비용화, 필사본 위주, 지역적 제한"], a:1, h:"스마트폰이나 MP3 플레이어가 등장하며 달라진 기기의 물리적 특성과 정보 형태를 생각해보세요.", e:"20세기 후반 이후 정보 통신 기술의 발달로 인터넷 기술과 서비스가 확산되면서, 미디어는 소형화, 영상 자료 등이 정보의 형태로 변환되는 디지털화, 그리고 어디서든 연결이 가능한 네트워크화의 특징을 가지게 되었습니다."},
     {q:"미디어가 갖는 세 가지 주요 특성(속성)을 모두 고르시오.", o:["정치적, 사회적, 기술적", "구조적, 기능적, 갈등적", "경제적, 문화적, 공적인", "대중적, 엘리트적, 독점적"], a:2, h:"미디어를 운영하는 주체의 목적, 전달하는 내용의 성격, 그리고 사회에서의 역할을 포괄적으로 생각해보세요.", e:"미디어는 이윤 창출을 목표로 하는 기업 활동과 관련된 경제적인 특성, 콘텐츠를 통해 가치관, 이념 등을 내포하고 확산하는 문화적인 특성, 그리고 여론 형성 및 사회 규범의 영향을 받는 공적인 특성을 가집니다."},
     {q:"미디어의 경제적 특성에 대한 설명으로 가장 적절한 것은?", o:["미디어의 가장 중요한 고객은 뉴스나 콘텐츠를 소비하는 시청자, 청취자이다.", "공영 방송은 경제적인 속성을 전혀 가지지 않는다.", "미디어 기업은 이윤 창출과 자본 축적을 목표로 하는 경제 조직이며, 주 수입원은 광고 수입에 의존한다.", "미디어는 자본의 순환을 막고 대기업의 이미지를 비판하는 데 주로 기여한다."], a:2, h:"미디어 기업의 주된 운영 자금이 어디에서 오는지 생각해보세요.", e:"미디어 기업은 이윤 창출을 목표로 하는 경제 조직이며, 현대 사회에서 거의 모든 미디어 기업의 재원은 광고 수입에 의존합니다. 미디어 기업에게 가장 중요한 고객(클라이언트)은 광고주입니다."},
-    {q:"미디어의 문화적 특성을 가장 잘 설명하는 사례는?", o:["선거 기간 중 여론 조사 결과의 언론 공표가 금지된다.", "미디어 기업이 광고를 통해 자본의 순환과 확대 재생산에 기여한다.", "언론사마다 동일한 사회 현상에 대해 전혀 다른 관점으로 보도하는 경우가 나타난다.", "미디어 기업은 이윤 창출을 위해 경제적 조직으로 운영된다."], a:2, h:"미디어가 단순한 사실 전달이 아닌, 가치관, 이념, 해석을 담고 있는 측면을 찾아보세요.", e:"미디어의 문화적 특성은 콘텐츠가 지적, 정신적, 문화적 특성을 가지며, 정서, 가치관, 이념, 규범 등을 내포한다는 점입니다. 동일한 사회 현상에 대해 언론사마다 다르게 보도하는 것은 콘텐츠를 생산하는 사람들의 관점이나 이데올로기가 확산되는 문화적 특성의 대표적인 사례입니다."},
-    {q:"미디어가 공적인 특성을 가지고 있다는 것을 보여주는 사례로 가장 적절한 것은?", o:["미디어 기업이 광고 수입을 통해 이윤을 창출한다.", "미디어가 드라마나 영화를 통해 특정 사회의 가치관을 재생산한다.", "선거 기간 동안 미디어를 통한 여론 조사 결과 공표가 법으로 금지된다.", "콘텐츠의 핵심이 종이와 같은 물리적 매개체가 아닌 내용(컨텐츠) 자체에 있다."], a:2, h:"미디어가 공공의 영역, 특히 민주주의나 사회 규범에 의해 규제받는 상황을 생각해보세요.", e:"미디어가 사회 전체적으로 영향을 미치는 권력적인 역할을 하기 때문에, 민주주의 사회에서 사회 규범의 영향을 받고 방송통신법 등의 법으로 규제되기도 합니다. 선거 기간 중 여론 조사 결과 공표 금지는 대세론 형성으로 인한 사표 방지 심리를 막기 위한 미디어의 공적인 역할에 대한 규제의 예시입니다."},
+    {q:"미디어의 문화적 특성을 가장 잘 설명하는 사례는?", o:["선거일 전 일정 기간 동안 여론 조사 결과의 언론 공표가 금지된다.", "미디어 기업이 광고를 통해 자본의 순환과 확대 재생산에 기여한다.", "언론사마다 동일한 사회 현상에 대해 전혀 다른 관점으로 보도하는 경우가 나타난다.", "미디어 기업은 이윤 창출을 위해 경제적 조직으로 운영된다."], a:2, h:"미디어가 단순한 사실 전달이 아닌, 가치관, 이념, 해석을 담고 있는 측면을 찾아보세요.", e:"미디어의 문화적 특성은 콘텐츠가 지적, 정신적, 문화적 특성을 가지며, 정서, 가치관, 이념, 규범 등을 내포한다는 점입니다. 동일한 사회 현상에 대해 언론사마다 다르게 보도하는 것은 콘텐츠를 생산하는 사람들의 관점이나 이데올로기가 확산되는 문화적 특성의 대표적인 사례입니다."},
+    {q:"미디어가 공적인 특성을 가지고 있다는 것을 보여주는 사례로 가장 적절한 것은?", o:["미디어 기업이 광고 수입을 통해 이윤을 창출한다.", "미디어가 드라마나 영화를 통해 특정 사회의 가치관을 재생산한다.", "선거의 공정성을 위해 선거일 전 일정 기간 동안 여론 조사 결과 공표가 법으로 금지된다.", "콘텐츠의 핵심이 종이와 같은 물리적 매개체가 아닌 내용(컨텐츠) 자체에 있다."], a:2, h:"미디어가 공공의 영역, 특히 민주주의나 사회 규범에 의해 규제받는 상황을 생각해보세요.", e:"미디어가 사회 전체적으로 영향을 미치는 권력적인 역할을 하기 때문에, 민주주의 사회에서 사회 규범의 영향을 받고 방송통신법 등의 법으로 규제되기도 합니다. 선거일 전 일정 기간 동안 여론 조사 결과 공표를 금지하는 것은 대세론 형성으로 인한 표심 왜곡을 막기 위한 미디어의 공적인 역할에 대한 규제의 예시입니다."},
     {q:"미디어에 대한 관점 중, 미디어가 사회 통합에 기여하는 방식에 중점을 두며 사회 체계의 안정을 위한 사회적 기능을 한다고 보는 관점은?", o:["갈등론적 관점", "상징적 상호작용론적 관점", "미디어 리터러시 관점", "기능주의적 관점"], a:3, h:"사회의 안정과 통합, 그리고 제도의 긍정적 역할을 강조하는 이론적 틀을 떠올려보세요.", e:"기능주의적 관점은 미디어가 정보를 제공하고, 사회 공통의 가치관을 강화하여 사회 통합과 유지에 기여하며, 오락 기능을 통해 사회적 불만을 완화하는 등 사회 체계의 안정을 위한 기능적 역할을 수행한다고 봅니다."},
     {q:"기능주의적 관점에서 미디어가 수행하는 사회적 기능 중, 사람들이 사회 문제나 갈등을 잊게 만들어 사회적 불만과 긴장을 완화시키는 안전장치 역할을 하는 기능은?", o:["동원 기능", "의사소통 기능", "지속성 기능", "오락 기능"], a:3, h:"독재 시절에 '3S 정책'이 활용되었던 목적을 생각해보세요.", e:"미디어는 즐거움과 다양성을 제공하여 사회 구성원이 사회 문제와 갈등을 잊게 만듦으로써 사회적 불만과 긴장을 약화시키는 오락의 기능을 수행합니다."},
     {q:"기능주의적 관점에서 미디어가 수행하는 사회적 기능 중, 경제 성장, 종교 강화, (전쟁 시) 군 입대 독려 등의 목적을 이루기 위해 사회적 자원을 집중시키는 캠페인을 실시하는 기능은?", o:["정보 제공 기능", "오락 기능", "의사소통 기능", "동원 기능"], a:3, h:"박정희 대통령 시절 '잘 살아보세' 노래와 새마을 운동 홍보의 목적을 생각해보세요.", e:"동원 기능은 미디어가 경제 성장이나 국가 발전 목표 등을 위해 사회적 자원을 동원하는 캠페인을 실시하는 것을 의미합니다. 이는 공익 광고처럼 직접적으로 이루어지기도 하고, 영화나 드라마를 통해 간접적으로 이루어지기도 합니다."},
@@ -141,6 +162,8 @@ const quizData = [
 
 let curIdx = 0;
 let attempts = 0;
+// 점수 및 상태 관리 (null: 미응시, true: 정답 점수획득, false: 오답 점수실패)
+let userResults = new Array(quizData.length).fill(null);
 
 const qEl = document.getElementById('question');
 const optContainer = document.getElementById('options-container');
@@ -152,10 +175,13 @@ const progText = document.getElementById('progress-text');
 const qNum = document.getElementById('q-num');
 const quizScreen = document.getElementById('quiz-screen');
 const resultScreen = document.getElementById('result-screen');
+const scoreResultText = document.getElementById('score-result-text');
 
 function loadQuestion() {
     const d = quizData[curIdx];
     attempts = 0; 
+    
+    // UI 초기화
     qNum.innerText = curIdx + 1;
     progText.innerText = `${curIdx + 1} / ${quizData.length}`;
     qEl.innerText = d.q;
@@ -167,35 +193,81 @@ function loadQuestion() {
     const prevBtn = document.getElementById('prev-btn');
     if (prevBtn) prevBtn.disabled = curIdx === 0;
 
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.innerText = (curIdx === quizData.length - 1) ? "결과 보기" : "다음";
+    nextBtn.classList.remove('active');
+    
+    // 이미 푼 문제(점수가 결정된 상태) 확인
+    const isSolved = userResults[curIdx] !== null;
+
     d.o.forEach((opt, i) => {
-        const btn = document.createElement('div');
-        btn.classList.add('option-btn');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn';
         btn.innerText = opt;
         btn.onclick = () => checkAnswer(i, btn);
+        
+        // 이미 푼 문제라면 UI 복원 (정답 표시 및 잠금)
+        if (isSolved) {
+            optContainer.classList.add('locked');
+            if (i === d.a) {
+                btn.classList.add('correct');
+            }
+            btn.setAttribute('aria-disabled', 'true');
+        }
         optContainer.appendChild(btn);
     });
+
+    // 이미 푼 문제라면 해설 바로 보여주기
+    if (isSolved) {
+        expText.innerText = d.e;
+        expBox.style.display = 'block';
+        nextBtn.classList.add('active'); 
+    }
 }
 
 function showCorrectAnswer(answerIdx, explanation) {
     const allBtns = document.querySelectorAll('.option-btn');
     allBtns[answerIdx].classList.add('correct');
+    
+    // 모든 버튼 비활성화 처리 (접근성)
+    allBtns.forEach(btn => btn.setAttribute('aria-disabled', 'true'));
+    
     optContainer.classList.add('locked');
     hintBox.style.display = 'none';
     expText.innerText = explanation;
     expBox.style.display = 'block';
+    
+    document.getElementById('next-btn').classList.add('active');
 }
 
 function checkAnswer(sel, btn) {
     const d = quizData[curIdx];
-    if (optContainer.classList.contains('locked') || btn.classList.contains('wrong')) return;
+    if (!d) return; 
+
+    // 잠금 상태이거나 이미 클릭한 오답 버튼은 무시
+    if (optContainer.classList.contains('locked') || btn.classList.contains('user-selected-wrong')) return;
 
     if (sel === d.a) {
+        // 정답 로직
         btn.classList.add('correct');
+        
+        // 아직 점수 판정이 안 난 상태라면 정답 처리
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = true;
+        }
+
         showCorrectAnswer(d.a, d.e);
     } else {
+        // 오답 로직
         attempts++;
-        btn.classList.add('wrong');
+        btn.classList.add('user-selected-wrong'); // CSS 클래스 연결
         
+        // 첫 시도에 틀렸다면 점수 획득 실패 처리 (중복 할당 방지)
+        if (userResults[curIdx] === null) {
+            userResults[curIdx] = false; 
+        }
+
         if (attempts >= 2) {
             showCorrectAnswer(d.a, d.e);
         } else {
@@ -210,8 +282,8 @@ function nextQuestion() {
         curIdx++;
         loadQuestion();
     } else {
-        quizScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+        // 마지막 문제에서 다음 버튼 클릭 시 결과 화면 호출
+        showResult();
     }
 }
 
@@ -222,6 +294,23 @@ function prevQuestion() {
     }
 }
 
+function showResult() {
+    quizScreen.style.display = 'none';
+    resultScreen.style.display = 'block';
+    
+    // 점수 계산: userResults 배열에서 true인 것만 카운트
+    const finalScore = userResults.filter(r => r === true).length;
+    const wrongCount = quizData.length - finalScore;
+
+    scoreResultText.innerHTML = `
+        총 ${quizData.length}문제 중 <span class="score-highlight">${finalScore}문제</span>를 맞추셨습니다!<br>
+        (틀린 문제: <span class="score-wrong">${wrongCount}개</span>)<br><br>
+        준비 잘 하셔서 <strong>치킨 장학금 이상</strong> 꼭 탑시다!<br>
+        대/충 ㅋ 퐈이팅! ㅎ
+    `;
+}
+
+// 초기화 실행
 loadQuestion();
 </script>
 </body>
